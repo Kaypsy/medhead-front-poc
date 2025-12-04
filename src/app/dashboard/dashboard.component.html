@@ -1,0 +1,260 @@
+<div class="dashboard">
+  <header class="topbar">
+    <button class="ghost-btn" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <div class="brand">Bubbly Dashboard</div>
+
+    <form class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 0l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <input type="search" placeholder="Search ..." aria-label="Search" />
+    </form>
+
+    <div class="top-actions">
+      <span class="status-dot green"></span>
+      <button class="pill" aria-label="Notifications">10</button>
+      <img src="/assets/avatars/avatar-6.jpg" alt="User avatar" class="avatar" />
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Main</p>
+        <nav>
+          <a class="sidebar-link active" href="#" aria-current="page">
+            <span class="icon-dot purple"></span>
+            Dashboard
+          </a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>CMS</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Pages</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Components</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Charts</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Forms</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Tables</a>
+        </nav>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-heading">Docs</p>
+        <nav>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Introduction</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Directory structure</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Gulp.js</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>CSS</a>
+          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Credits</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="kpi-grid">
+        @for (kpi of kpiCards; track kpi.title) {
+          <article class="kpi-card" [ngClass]="kpi.color">
+            <div class="kpi-text">
+              <div class="dot" [ngClass]="kpi.color"></div>
+              <div>
+                <h3>{{ kpi.title }}</h3>
+                <p>{{ kpi.value }}</p>
+              </div>
+            </div>
+            <div class="kpi-icon">
+              @switch (kpi.icon) {
+                @case ('server') { <svg viewBox="0 0 24 24"><path d="M4 6h16v4H4zM4 14h16v4H4z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="8" cy="8" r="1" /><circle cx="8" cy="16" r="1" /></svg> }
+                @case ('clipboard') { <svg viewBox="0 0 24 24"><path d="M9 4h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 7h6" stroke="currentColor" stroke-width="2"/></svg> }
+                @case ('truck') { <svg viewBox="0 0 24 24"><path d="M3 7h10v8H3zM13 10h4l3 3v2h-7" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg> }
+                @case ('receipt') { <svg viewBox="0 0 24 24"><path d="M6 4h12v16l-2-1-2 1-2-1-2 1-2-1-2 1z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h4" stroke="currentColor" stroke-width="2"/></svg> }
+              }
+            </div>
+          </article>
+        }
+      </section>
+
+      <section class="section">
+        <h2>Finances 💰</h2>
+        <div class="finances-grid">
+          <article class="card balance-card">
+            <header class="card-header">
+              <h3>Your account balance</h3>
+            </header>
+            <div class="card-body">
+              <svg viewBox="0 0 300 140" class="line-chart" aria-hidden="true">
+                <defs>
+                  <linearGradient id="balanceGradient" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35" />
+                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05" />
+                  </linearGradient>
+                </defs>
+                <path [attr.d]="balanceTrendPath" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" />
+                <path [attr.d]="balanceTrendPath + ' L300 140 L0 140 Z'" fill="url(#balanceGradient)" />
+              </svg>
+              <div class="axis">
+                <span>January</span><span>February</span><span>March</span><span>April</span><span>May</span><span>June</span><span>July</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="donut-col">
+            @for (donut of donutStats.slice(0, 2); track donut.title) {
+              <article class="card donut-card">
+                <div class="donut-info">
+                  <h3>{{ donut.value }} <span class="dot" [style.background]="donut.color"></span></h3>
+                  <p class="label">{{ donut.title }}</p>
+                  <hr />
+                  <p class="muted">{{ donut.subtitle }}</p>
+                </div>
+                <div class="donut-chart">
+                  <svg viewBox="0 0 120 120">
+                    <circle class="track" cx="60" cy="60" r="46" />
+                    <circle
+                      class="value"
+                      cx="60"
+                      cy="60"
+                      r="46"
+                      [attr.stroke]="donut.color"
+                      [attr.stroke-dasharray]="donut.percent + ' 100'"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+              </article>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="section usage">
+        <h2>Usage 📈</h2>
+        <div class="usage-grid">
+          <div class="donut-col">
+            @for (donut of donutStats.slice(2); track donut.title) {
+              <article class="card donut-card">
+                <div class="donut-info">
+                  <h3>{{ donut.value }} <span class="dot" [style.background]="donut.color"></span></h3>
+                  <p class="label">{{ donut.title }}</p>
+                  <hr />
+                  <p class="muted">{{ donut.subtitle }}</p>
+                </div>
+                <div class="donut-chart">
+                  <svg viewBox="0 0 120 120">
+                    <circle class="track" cx="60" cy="60" r="46" />
+                    <circle
+                      class="value"
+                      cx="60"
+                      cy="60"
+                      r="46"
+                      [attr.stroke]="donut.color"
+                      [attr.stroke-dasharray]="donut.percent + ' 100'"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+              </article>
+            }
+          </div>
+          <article class="card referrals-card">
+            <header class="card-header">
+              <h3>Your referrals</h3>
+            </header>
+            <div class="card-body">
+              <svg viewBox="0 0 240 140" class="line-chart" aria-hidden="true">
+                <path [attr.d]="referralTrendPath" fill="none" stroke="#6366f1" stroke-width="4" stroke-linecap="round" />
+              </svg>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section updates">
+        <h2>Updates 🆕</h2>
+        <div class="updates-grid">
+          <article class="card transactions">
+            <header class="card-header">
+              <h3>Transaction history</h3>
+              <p class="muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            </header>
+            <div class="card-body">
+              @for (transaction of transactions; track transaction.title) {
+                <div class="transaction-row">
+                  <div class="icon-wrap" [style.color]="transaction.color">
+                    @switch (transaction.icon) {
+                      @case ('dropbox') { <svg viewBox="0 0 24 24"><path d="M6 5l6 4-6 4-6-4 6-4Zm0 6l6 4-6 4-6-4 6-4Zm6-6l6 4-6 4-6-4 6-4Zm0 6l6 4-6 4-6-4 6-4Z" fill="currentColor"/></svg> }
+                      @case ('apple') { <svg viewBox="0 0 24 24"><path d="M16.5 2c0 1.5-1.2 3-3 3-.2-2 1.8-3 3-3ZM12.5 7c1.4 0 2.5 1.2 2.5 3 0 2.3-1.3 6-2.5 6s-2.5-3.7-2.5-6c0-1.8 1.1-3 2.5-3ZM9 9.5c.6 0 1 .6 1 1.5 0 1.8-1 4-2 4s-2-1.8-2-3.6c0-1 .7-1.9 1.7-1.9.5 0 1 .2 1.3.5.3-.3.6-.5 1-.5Zm7 0c.6 0 1 .6 1 1.5 0 1.8-1 4-2 4s-2-1.8-2-3.6c0-1 .7-1.9 1.7-1.9.5 0 1 .2 1.3.5.3-.3.6-.5 1-.5Z" fill="currentColor"/></svg> }
+                      @case ('basket') { <svg viewBox="0 0 24 24"><path d="M4 10h16l-1 9H5l-1-9Z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 10 7 5M15 10l2-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> }
+                      @case ('android') { <svg viewBox="0 0 24 24"><path d="M8 4l1.5 2M16 4l-1.5 2M6 9h12v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9Zm-2 3v3m16-3v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> }
+                    }
+                  </div>
+                  <div class="transaction-text">
+                    <div class="title-row">
+                      <span>{{ transaction.title }}</span>
+                      <span class="dot small" [style.background]="transaction.color"></span>
+                    </div>
+                    <small class="muted">{{ transaction.description }}</small>
+                  </div>
+                  <div class="amount">{{ transaction.amount }}</div>
+                </div>
+              }
+            </div>
+          </article>
+
+          <div class="updates-side">
+            <div class="mini-kpis">
+              @for (quick of quickStats; track quick.title) {
+                <article class="kpi-card compact" [style.--accent]="quick.color">
+                  <div class="kpi-text">
+                    <div class="dot" [style.background]="quick.color"></div>
+                    <div>
+                      <h3>{{ quick.title }}</h3>
+                      <p>{{ quick.subtitle }}</p>
+                    </div>
+                  </div>
+                  <div class="kpi-icon square" [style.color]="quick.color">
+                    @switch (quick.icon) {
+                      @case ('check') { <svg viewBox="0 0 24 24"><path d="m4 13 5 5 11-13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg> }
+                      @case ('dollar') { <svg viewBox="0 0 24 24"><path d="M12 3v18m-3-5c0 1.7 1.3 3 3 3s3-.8 3-2.5S12 14 12 12s3-2.2 3-4.5S13.7 4 12 4s-3 1.3-3 3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg> }
+                      @case ('users') { <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 1 6 0v1a3 3 0 1 1-6 0v-1Zm-5 9a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg> }
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+
+            <article class="card visitors-card">
+              <div class="card-body">
+                <h2 class="visitors-value">86.4 <span class="dot red"></span></h2>
+                <p class="muted">Daily profile visitors</p>
+                <svg viewBox="0 0 260 120" class="line-chart" aria-hidden="true">
+                  <path d="M0 70 C40 40, 80 100, 120 60 S 200 20, 260 80" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round" />
+                </svg>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section people">
+        <h2>People 👩‍💻</h2>
+        <div class="people-grid">
+          @for (message of messages; track message.name) {
+            <article class="card message-card">
+              <div class="message-date">{{ message.date }}</div>
+              <div class="message-meta">
+                <img [src]="message.avatar" [alt]="message.name" class="avatar small" />
+                <div>
+                  <h4>{{ message.name }}</h4>
+                  <div class="tag">{{ message.tag }}</div>
+                </div>
+              </div>
+              <p class="muted">{{ message.text }}</p>
+            </article>
+          }
+        </div>
+      </section>
+    </main>
+  </div>
+</div>

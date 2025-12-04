@@ -1,0 +1,61 @@
+<div class="login-page">
+  <div class="login-card">
+    <header class="card-header">
+      <p class="card-kicker">Bubbly Dashboard</p>
+    </header>
+
+    <div class="card-body">
+      <h1 class="card-title">Hi, welcome back! 👋👋</h1>
+      <p class="card-subtitle">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+      </p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <label class="input-group">
+          <span class="input-label">Email address</span>
+          <input
+            type="email"
+            formControlName="email"
+            name="email"
+            autocomplete="email"
+            [class.invalid]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+          />
+          @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+            <span class="error">Enter a valid email address.</span>
+          }
+        </label>
+
+        <label class="input-group">
+          <span class="input-label">Password</span>
+          <input
+            type="password"
+            formControlName="password"
+            name="password"
+            autocomplete="current-password"
+            [class.invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+          />
+          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+            <span class="error">Password must be at least 6 characters.</span>
+          }
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" formControlName="remember" />
+          <span>Remember me</span>
+        </label>
+
+        <button class="cta" type="submit" [disabled]="loginForm.invalid">Submit</button>
+      </form>
+    </div>
+
+    <footer class="card-footer">
+      <p>Don't have an account? <a href="#" aria-label="Register">Register</a>.</p>
+    </footer>
+  </div>
+
+  <section class="hero">
+    <img src="/assets/illustrations/drawkit-illustration.svg" alt="" class="hero-illustration" />
+    <h2>Start saving your time & money</h2>
+    <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in</p>
+  </section>
+</div>
