@@ -12,16 +12,16 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
         <label class="input-group">
-          <span class="input-label">Email address</span>
+          <span class="input-label">Username</span>
           <input
-            type="email"
-            formControlName="email"
-            name="email"
-            autocomplete="email"
-            [class.invalid]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+            type="text"
+            formControlName="username"
+            name="username"
+            autocomplete="username"
+            [class.invalid]="loginForm.controls.username.invalid && loginForm.controls.username.touched"
           />
-          @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
-            <span class="error">Enter a valid email address.</span>
+          @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+            <span class="error">Username is required.</span>
           }
         </label>
 
@@ -44,8 +44,18 @@
           <span>Remember me</span>
         </label>
 
-        <button class="cta" type="submit" [disabled]="loginForm.invalid">Submit</button>
+        <button class="cta" type="submit" [disabled]="loginForm.invalid || loading">
+          @if (loading) {
+            <span class="spinner" aria-hidden="true"></span>
+          } @else {
+            <span>Submit</span>
+          }
+        </button>
       </form>
+
+      @if (errorMessage) {
+        <p class="error global">{{ errorMessage }}</p>
+      }
     </div>
 
     <footer class="card-footer">
