@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TopbarComponent } from '../shared/components/topbar/topbar.component';
+import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 
 type KpiCard = {
   title: string;
@@ -36,7 +38,7 @@ type Message = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TopbarComponent, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

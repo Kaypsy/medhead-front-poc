@@ -1,0 +1,25 @@
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <p class="sidebar-heading">Main</p>
+    <nav>
+      @for (link of mainLinks; track link.label) {
+        <a class="sidebar-link" [class.active]="link.active" [href]="link.href" [attr.aria-current]="link.active ? 'page' : null">
+          <span class="icon-dot" [ngClass]="link.accent"></span>
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+  </div>
+
+  <div class="sidebar-section">
+    <p class="sidebar-heading">Docs</p>
+    <nav>
+      @for (link of docLinks; track link.label) {
+        <a class="sidebar-link" [href]="link.href">
+          <span class="icon-dot"></span>
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+  </div>
+</aside>

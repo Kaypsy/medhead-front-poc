@@ -10,3 +10,17 @@ body {
   background: #f6f7fb;
   color: #111827;
 }
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
+}
+
+.avatar.small {
+  width: 36px;
+  height: 36px;
+}

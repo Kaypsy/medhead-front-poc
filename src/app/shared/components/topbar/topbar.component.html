@@ -1,0 +1,22 @@
+<header class="topbar">
+  <button class="ghost-btn" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <div class="brand">{{ brand }}</div>
+
+  <form class="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 0l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <input type="search" [placeholder]="searchPlaceholder" aria-label="Search" />
+  </form>
+
+  <div class="top-actions">
+    <span class="status-dot"></span>
+    <button class="pill" aria-label="Notifications">{{ notificationCount }}</button>
+    <img [src]="avatarSrc" alt="User avatar" class="avatar" />
+  </div>
+</header>

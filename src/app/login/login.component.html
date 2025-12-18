@@ -1,18 +1,14 @@
 <div class="login-page">
   <div class="login-card">
     <header class="card-header">
-      <p class="card-kicker">Bubbly Dashboard</p>
+      <p class="card-kicker">Gestion des lits</p>
     </header>
 
     <div class="card-body">
-      <h1 class="card-title">Hi, welcome back! 👋👋</h1>
-      <p class="card-subtitle">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
-      </p>
-
+      <h1 class="card-title">Bonjour, bienvenue dans l'interface! 👋👋</h1>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
         <label class="input-group">
-          <span class="input-label">Username</span>
+          <span class="input-label">Login</span>
           <input
             type="text"
             formControlName="username"
@@ -21,12 +17,12 @@
             [class.invalid]="loginForm.controls.username.invalid && loginForm.controls.username.touched"
           />
           @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
-            <span class="error">Username is required.</span>
+            <span class="error">Indiquez votre login.</span>
           }
         </label>
 
         <label class="input-group">
-          <span class="input-label">Password</span>
+          <span class="input-label">Mot de passe</span>
           <input
             type="password"
             formControlName="password"
@@ -35,20 +31,20 @@
             [class.invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
           />
           @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
-            <span class="error">Password must be at least 6 characters.</span>
+            <span class="error">Indiquez votre mot de passe.</span>
           }
         </label>
 
         <label class="checkbox">
           <input type="checkbox" formControlName="remember" />
-          <span>Remember me</span>
+          <span>Se souvenir de moi</span>
         </label>
 
         <button class="cta" type="submit" [disabled]="loginForm.invalid || loading">
           @if (loading) {
             <span class="spinner" aria-hidden="true"></span>
           } @else {
-            <span>Submit</span>
+            <span>Se connecter</span>
           }
         </button>
       </form>
@@ -59,13 +55,13 @@
     </div>
 
     <footer class="card-footer">
-      <p>Don't have an account? <a href="#" aria-label="Register">Register</a>.</p>
+      <p>Tout droit réservés 2025.</p>
     </footer>
   </div>
 
   <section class="hero">
     <img src="/assets/illustrations/drawkit-illustration.svg" alt="" class="hero-illustration" />
-    <h2>Start saving your time & money</h2>
-    <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed in</p>
+    <h2>Espace privé</h2>
+    <p>Seules les personnes habilités peuvent aceder à cet interface.</p>
   </section>
 </div>

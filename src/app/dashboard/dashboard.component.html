@@ -1,56 +1,8 @@
 <div class="dashboard">
-  <header class="topbar">
-    <button class="ghost-btn" aria-label="Toggle navigation">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-    </button>
-
-    <div class="brand">Bubbly Dashboard</div>
-
-    <form class="search">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 0l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      <input type="search" placeholder="Search ..." aria-label="Search" />
-    </form>
-
-    <div class="top-actions">
-      <span class="status-dot green"></span>
-      <button class="pill" aria-label="Notifications">10</button>
-      <img src="/assets/avatars/avatar-6.jpg" alt="User avatar" class="avatar" />
-    </div>
-  </header>
+  <app-topbar />
 
   <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-section">
-        <p class="sidebar-heading">Main</p>
-        <nav>
-          <a class="sidebar-link active" href="#" aria-current="page">
-            <span class="icon-dot purple"></span>
-            Dashboard
-          </a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>CMS</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Pages</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Components</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Charts</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Forms</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Tables</a>
-        </nav>
-      </div>
-
-      <div class="sidebar-section">
-        <p class="sidebar-heading">Docs</p>
-        <nav>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Introduction</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Directory structure</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Gulp.js</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>CSS</a>
-          <a class="sidebar-link" href="#"><span class="icon-dot"></span>Credits</a>
-        </nav>
-      </div>
-    </aside>
+    <app-sidebar />
 
     <main class="content">
       <section class="kpi-grid">
