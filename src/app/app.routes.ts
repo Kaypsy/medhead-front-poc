@@ -24,6 +24,14 @@ export const routes: Routes = [
     canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
   },
   {
+    path: 'specialties-groups',
+    loadComponent: () =>
+      import('./specialties-groups/specialties-groups.component').then(
+        (m) => m.SpecialtiesGroupsComponent
+      ),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
     path: '**',
     redirectTo: ''
   }

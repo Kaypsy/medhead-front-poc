@@ -60,6 +60,7 @@ export class MembersComponent {
   readonly mainLinks = [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Membres', href: '/members', active: true, accent: 'purple' },
+    { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Pages', href: '#' },
     { label: 'Components', href: '#' },
     { label: 'Charts', href: '#' },

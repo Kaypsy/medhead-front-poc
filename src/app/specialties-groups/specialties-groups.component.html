@@ -1,0 +1,141 @@
+<div class="specialties-groups">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Gestion</p>
+          <h1>Groupes de spécialités</h1>
+          <p class="subtitle">Liste des groupes de spécialités enregistrés</p>
+        </div>
+        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un groupe</button>
+      </header>
+
+      @if (statusMessage) {
+        <div class="alert" [class.error]="statusType === 'error'">
+          {{ statusMessage }}
+        </div>
+      }
+
+      @if (loadError) {
+        <div class="alert error">
+          {{ loadError }}
+        </div>
+      }
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Groupes</h2>
+          @if (groups$ | async; as groups) {
+            <span class="count">{{ groups.length }} au total</span>
+          }
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Nom du groupe</th>
+                <th>Code du groupe</th>
+                <th>Description</th>
+                <th>Statut</th>
+                <th>Date de création</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (loading) {
+                <tr>
+                  <td colspan="6" class="empty">Chargement des groupes...</td>
+                </tr>
+              } @else {
+                @if (groups$ | async; as groups) {
+                  @if (groups.length === 0) {
+                    <tr>
+                      <td colspan="6" class="empty">Aucun groupe trouvé.</td>
+                    </tr>
+                  } @else {
+                    @for (group of groups; track group.id) {
+                      <tr>
+                        <td>
+                          <div class="name-cell">
+                            <span class="name">{{ group.name }}</span>
+                            <span class="sub">Mis à jour : {{ group.updatedAt | date: 'mediumDate' }}</span>
+                          </div>
+                        </td>
+                        <td>{{ group.code }}</td>
+                        <td>{{ group.description }}</td>
+                        <td>
+                          <span class="status" [class.active]="group.isActive" [class.inactive]="!group.isActive">
+                            {{ group.isActive ? 'Actif' : 'Inactif' }}
+                          </span>
+                        </td>
+                        <td>{{ group.createdAt | date: 'mediumDate' }}</td>
+                        <td>
+                          <div class="actions">
+                            <button type="button" class="btn ghost" (click)="onEdit(group)">Modifier</button>
+                            <button type="button" class="btn danger" (click)="onDelete(group)">Supprimer</button>
+                            <button type="button" class="btn primary" (click)="onToggleStatus(group)">
+                              {{ group.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  @if (showCreateModal) {
+    <div class="modal-backdrop" (click)="onCloseCreateModal()"></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-group-title">
+      <header class="modal-header">
+        <h3 id="create-group-title">Ajouter un groupe</h3>
+        <button type="button" class="icon-btn" (click)="onCloseCreateModal()" aria-label="Fermer">
+          ✕
+        </button>
+      </header>
+      <form class="modal-body" [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+        <label class="confirm-label">
+          Nom du groupe
+          <input type="text" formControlName="name" autocomplete="off" />
+        </label>
+        @if (nameControl.touched && nameControl.invalid) {
+          <div class="field-error">Le nom du groupe est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Code
+          <input type="text" formControlName="code" readonly />
+        </label>
+        @if (codeControl.touched && codeControl.invalid) {
+          <div class="field-error">Le code est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Description
+          <textarea rows="3" formControlName="description"></textarea>
+        </label>
+
+        @if (createError) {
+          <div class="alert error">{{ createError }}</div>
+        }
+      </form>
+      <footer class="modal-footer">
+        <button type="button" class="btn ghost" (click)="onCloseCreateModal()" [disabled]="isCreating">Annuler</button>
+        <button type="button" class="btn primary" (click)="onSubmitCreate()" [disabled]="!canSubmitCreate">
+          @if (isCreating) { Création... } @else { Créer le groupe }
+        </button>
+      </footer>
+    </div>
+  }
+</div>
