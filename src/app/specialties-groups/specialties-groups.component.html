@@ -138,4 +138,39 @@
       </footer>
     </div>
   }
+
+  @if (showDeleteModal && selectedGroup) {
+    <div class="modal-backdrop" (click)="onCloseDeleteModal()"></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-group-title">
+      <header class="modal-header">
+        <h3 id="delete-group-title">Supprimer le groupe</h3>
+        <button type="button" class="icon-btn" (click)="onCloseDeleteModal()" aria-label="Fermer">
+          ✕
+        </button>
+      </header>
+      <div class="modal-body">
+        <p class="warning">
+          Cette action est irréversible. Le groupe sera définitivement supprimé.
+        </p>
+        <label class="confirm-label">
+          Saisissez le nom du groupe pour confirmer
+          <input type="text" [(ngModel)]="confirmInput" [placeholder]="selectedGroup.name" autocomplete="off" />
+        </label>
+        @if (deleteError) {
+          <div class="alert error">{{ deleteError }}</div>
+        }
+      </div>
+      <footer class="modal-footer">
+        <button type="button" class="btn ghost" (click)="onCloseDeleteModal()" [disabled]="isDeleting">Annuler</button>
+        <button
+          type="button"
+          class="btn danger"
+          (click)="onConfirmDelete()"
+          [disabled]="!canConfirmDelete"
+        >
+          @if (isDeleting) { Suppression... } @else { Confirmer la suppression }
+        </button>
+      </footer>
+    </div>
+  }
 </div>

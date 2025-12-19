@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inje
 import { CommonModule } from '@angular/common';
 import { catchError, of, BehaviorSubject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { CreateSpecialtyGroupPayload, SpecialtiesGroupsService, SpecialtyGroup } from './specialties-groups.service';
@@ -10,7 +10,7 @@ import { CreateSpecialtyGroupPayload, SpecialtiesGroupsService, SpecialtyGroup }
 @Component({
   selector: 'app-specialties-groups',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TopbarComponent, SidebarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TopbarComponent, SidebarComponent],
   templateUrl: './specialties-groups.component.html',
   styleUrl: './specialties-groups.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -30,6 +30,11 @@ export class SpecialtiesGroupsComponent {
   showCreateModal = false;
   isCreating = false;
   createError = '';
+  showDeleteModal = false;
+  isDeleting = false;
+  deleteError = '';
+  confirmInput = '';
+  selectedGroup: SpecialtyGroup | null = null;
 
   readonly createForm = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
@@ -88,6 +93,14 @@ export class SpecialtiesGroupsComponent {
 
   get canSubmitCreate(): boolean {
     return this.createForm.valid && !this.isCreating;
+  }
+
+  get canConfirmDelete(): boolean {
+    return Boolean(
+      this.selectedGroup &&
+        this.confirmInput === this.selectedGroup.name &&
+        !this.isDeleting
+    );
   }
 
   onOpenCreateModal(): void {
@@ -160,11 +173,62 @@ export class SpecialtiesGroupsComponent {
   }
 
   onDelete(group: SpecialtyGroup): void {
-    void group;
+    this.selectedGroup = group;
+    this.confirmInput = '';
+    this.deleteError = '';
+    this.showDeleteModal = true;
+  }
+
+  onCloseDeleteModal(): void {
+    if (this.isDeleting) {
+      return;
+    }
+    this.showDeleteModal = false;
+    this.selectedGroup = null;
+    this.confirmInput = '';
+    this.deleteError = '';
   }
 
   onToggleStatus(group: SpecialtyGroup): void {
     void group;
+  }
+
+  onConfirmDelete(): void {
+    if (!this.selectedGroup) {
+      return;
+    }
+    this.isDeleting = true;
+    this.deleteError = '';
+
+    this.service
+      .deleteGroup(this.selectedGroup.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.status === 204) {
+            const updated = this.groupsSubject
+              .getValue()
+              .filter((group) => group.id !== this.selectedGroup?.id);
+            this.groupsSubject.next(updated);
+            this.statusType = 'success';
+            this.statusMessage = `Groupe ${this.selectedGroup?.name} supprimé.`;
+            this.onCloseDeleteModal();
+          } else {
+            this.deleteError = 'Réponse inattendue lors de la suppression.';
+          }
+          this.isDeleting = false;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.isDeleting = false;
+          if (err?.status === 404) {
+            this.deleteError = "Ce groupe n'existe plus.";
+          } else {
+            this.deleteError = 'Une erreur est survenue lors de la suppression.';
+          }
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   private generateCode(input: string): string {

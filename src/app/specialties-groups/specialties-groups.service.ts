@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -33,5 +33,9 @@ export class SpecialtiesGroupsService {
 
   createGroup(payload: CreateSpecialtyGroupPayload): Observable<SpecialtyGroup> {
     return this.http.post<SpecialtyGroup>(`${environment.apiUrl}/api/specialty-groups`, payload);
+  }
+
+  deleteGroup(id: number): Observable<HttpResponse<void>> {
+    return this.http.delete<void>(`${environment.apiUrl}/api/specialty-groups/${id}`, { observe: 'response' });
   }
 }

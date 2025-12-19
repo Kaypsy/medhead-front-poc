@@ -193,6 +193,15 @@ tbody tr {
   gap: 1rem;
 }
 
+.warning {
+  margin: 0;
+  color: #b45309;
+  background: #ffedd5;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
 .confirm-label {
   display: grid;
   gap: 0.5rem;
