@@ -11,12 +11,11 @@
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 0l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
-    <input type="rechercher un hopital" [placeholder]="searchPlaceholder" aria-label="Search" />
+    <input type="search" [placeholder]="searchPlaceholder" aria-label="Search" />
   </form>
 
   <div class="top-actions">
     <span class="status-dot"></span>
-    <button class="pill" aria-label="Notifications">{{ notificationCount }}</button>
-    <img [src]="avatarSrc" alt="User avatar" class="avatar" />
+    <button class="logout-btn" type="button" aria-label="Déconnexion" (click)="onLogout()">Déconnexion</button>
   </div>
 </header>
