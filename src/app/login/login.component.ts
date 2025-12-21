@@ -28,6 +28,14 @@ export class LoginComponent {
   loading = false;
   showPassword = false;
 
+  ngOnInit(): void {
+    if (this.auth.isAuthenticated) {
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      const targetUrl = this.auth.resolveRedirectUrl(returnUrl);
+      this.router.navigateByUrl(targetUrl);
+    }
+  }
+
   get passwordFieldType(): 'password' | 'text' {
     return this.showPassword ? 'text' : 'password';
   }
@@ -54,8 +62,8 @@ export class LoginComponent {
     this.auth.login({ username, password }, remember).subscribe({
       next: async () => {
         this.loading = false;
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
-        await this.router.navigateByUrl(returnUrl);
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        await this.router.navigateByUrl(this.auth.resolveRedirectUrl(returnUrl));
       },
       error: (err) => {
         this.loading = false;

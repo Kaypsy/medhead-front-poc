@@ -18,6 +18,7 @@ export type LoginPayload = {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenKey = 'auth_token';
+  readonly dashboardUrl = '/dashboard';
 
   login(payload: LoginPayload, remember = false): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/login`, payload).pipe(
@@ -37,6 +38,16 @@ export class AuthService {
 
   get isAuthenticated(): boolean {
     return Boolean(this.token);
+  }
+
+  resolveRedirectUrl(returnUrl?: string | null): string {
+    if (!returnUrl || !returnUrl.startsWith('/')) {
+      return this.dashboardUrl;
+    }
+    if (returnUrl === '/login' || returnUrl.startsWith('/login?')) {
+      return this.dashboardUrl;
+    }
+    return returnUrl;
   }
 
   private storeToken(token: string, remember: boolean): void {
