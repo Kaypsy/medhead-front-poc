@@ -80,12 +80,7 @@ export class HospitalsComponent {
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
-    { label: 'Hopitaux', href: 'hospitals', active: true, accent: 'purple' },
-    { label: 'Pages', href: '#' },
-    { label: 'Components', href: '#' },
-    { label: 'Charts', href: '#' },
-    { label: 'Forms', href: '#' },
-    { label: 'Tables', href: '#' }
+    { label: 'Hopitaux', href: 'hospitals', active: true, accent: 'purple' }
   ];
 
   constructor() {

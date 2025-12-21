@@ -62,12 +62,7 @@ export class MembersComponent {
     { label: 'Membres', href: '/members', active: true, accent: 'purple' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
-    { label: 'Hopitaux', href: 'hospitals' },
-    { label: 'Pages', href: '#' },
-    { label: 'Components', href: '#' },
-    { label: 'Charts', href: '#' },
-    { label: 'Forms', href: '#' },
-    { label: 'Tables', href: '#' }
+    { label: 'Hopitaux', href: 'hospitals' }
   ];
 
   constructor() {
