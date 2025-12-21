@@ -1,17 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, catchError, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
-import {
-  CreateHospitalPayload,
-  Hospital,
-  HospitalsResponse,
-  HospitalsService,
-  Specialty
-} from './hospitals.service';
+import { CreateHospitalPayload, Hospital, HospitalsResponse, HospitalsService } from './hospitals.service';
+import { SpecialtiesService, Specialty } from '../specialties/specialties.service';
 
 const emptyHospitalsResponse: HospitalsResponse = {
   totalElements: 0,
@@ -44,6 +39,7 @@ const emptyHospitalsResponse: HospitalsResponse = {
 })
 export class HospitalsComponent {
   private readonly service = inject(HospitalsService);
+  private readonly specialtiesService = inject(SpecialtiesService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly fb = inject(FormBuilder);
@@ -150,20 +146,49 @@ export class HospitalsComponent {
     }
 
     const raw = this.createForm.getRawValue();
+    const nameValue = raw.name.trim();
+    const addressValue = raw.address.trim();
+    const cityValue = raw.city.trim();
+    const postalCodeValue = raw.postalCode.trim();
     const totalBedsValue = this.toNumber(raw.totalBeds);
-    if (totalBedsValue === undefined) {
+    const specialtyIdsValue = raw.specialtyIds
+      .map((id) => Number(id))
+      .filter((id) => Number.isFinite(id));
+
+    if (!nameValue) {
+      this.nameControl.setErrors({ required: true });
+    }
+    if (!addressValue) {
+      this.addressControl.setErrors({ required: true });
+    }
+    if (!cityValue) {
+      this.cityControl.setErrors({ required: true });
+    }
+    if (!postalCodeValue) {
+      this.postalCodeControl.setErrors({ required: true });
+    }
+    if (specialtyIdsValue.length === 0) {
+      this.specialtyIdsControl.setErrors({ required: true });
+    }
+    if (totalBedsValue === undefined || totalBedsValue < 0 || !Number.isInteger(totalBedsValue)) {
       this.totalBedsControl.setErrors({ required: true });
+    }
+    if (!this.createForm.valid || specialtyIdsValue.length === 0) {
+      this.createForm.markAllAsTouched();
+      return;
+    }
+    if (totalBedsValue === undefined) {
       this.createForm.markAllAsTouched();
       return;
     }
 
     const payload: CreateHospitalPayload = {
-      name: raw.name.trim(),
-      address: raw.address.trim(),
-      city: raw.city.trim(),
-      postalCode: raw.postalCode.trim(),
+      name: nameValue,
+      address: addressValue,
+      city: cityValue,
+      postalCode: postalCodeValue,
       totalBeds: totalBedsValue,
-      specialtyIds: raw.specialtyIds,
+      specialtyIds: specialtyIdsValue,
       latitude: this.toNumber(raw.latitude),
       longitude: this.toNumber(raw.longitude),
       phoneNumber: raw.phoneNumber.trim() ? raw.phoneNumber.trim() : undefined
@@ -191,7 +216,15 @@ export class HospitalsComponent {
           } else if (err?.status === 403) {
             this.createError = "Accès refusé. Vous n'avez pas les droits nécessaires.";
           } else if (err?.status === 400) {
-            this.createError = "Requête invalide. Vérifiez les champs saisis.";
+            const apiErrors = err?.error?.errors;
+            if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+              this.createError = apiErrors.join(' ');
+            } else if (apiErrors && typeof apiErrors === 'object') {
+              const details = Object.values(apiErrors).filter(Boolean).join(' ');
+              this.createError = details || "Requête invalide. Vérifiez les champs saisis.";
+            } else {
+              this.createError = "Requête invalide. Vérifiez les champs saisis.";
+            }
           } else {
             const apiMessage = err?.error?.message || err?.error?.error;
             this.createError = apiMessage
@@ -238,10 +271,11 @@ export class HospitalsComponent {
     this.specialtiesLoading = true;
     this.specialtiesError = '';
 
-    this.service
+    this.specialtiesService
       .getSpecialties()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
+        map((res) => res.content ?? []),
         catchError(() => {
           this.specialtiesError = 'Impossible de charger les spécialités disponibles.';
           this.specialtiesLoading = false;

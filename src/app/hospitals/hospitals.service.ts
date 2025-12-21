@@ -12,11 +12,6 @@ export type Hospital = {
   longitude: number;
 };
 
-export type Specialty = {
-  id: number;
-  name: string;
-};
-
 export type CreateHospitalPayload = {
   name: string;
   address: string;
@@ -68,9 +63,5 @@ export class HospitalsService {
 
   createHospital(payload: CreateHospitalPayload): Observable<Hospital> {
     return this.http.post<Hospital>(`${environment.apiUrl}/api/hospitals`, payload);
-  }
-
-  getSpecialties(): Observable<Specialty[]> {
-    return this.http.get<Specialty[]>(`${environment.apiUrl}/api/specialties`);
   }
 }

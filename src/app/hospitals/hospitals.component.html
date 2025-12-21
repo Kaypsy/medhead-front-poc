@@ -11,7 +11,7 @@
           <h1>Hopitaux</h1>
           <p class="subtitle">Liste des hopitaux enregistres</p>
         </div>
-        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un groupe</button>
+        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un hôpital</button>
       </header>
 
       @if (statusMessage) {
@@ -125,7 +125,7 @@
 
         <label class="confirm-label">
           Total de lits
-          <input type="number" min="0" formControlName="totalBeds" />
+          <input type="number" min="0" step="1" formControlName="totalBeds" />
         </label>
         @if (totalBedsControl.touched && totalBedsControl.invalid) {
           <div class="field-error">Le total de lits est obligatoire.</div>
