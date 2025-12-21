@@ -19,27 +19,38 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenKey = 'auth_token';
 
-  login(payload: LoginPayload): Observable<AuthResponse> {
+  login(payload: LoginPayload, remember = false): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/login`, payload).pipe(
       tap((res) => {
-        this.storeToken(res.token);
+        this.storeToken(res.token, remember);
       })
     );
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
+    this.clearStoredToken();
   }
 
   get token(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
   }
 
   get isAuthenticated(): boolean {
     return Boolean(this.token);
   }
 
-  private storeToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+  private storeToken(token: string, remember: boolean): void {
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem(this.tokenKey, token);
+    this.clearStoredToken(storage === localStorage ? sessionStorage : localStorage);
+  }
+
+  private clearStoredToken(storage: Storage | 'both' = 'both'): void {
+    if (storage === 'both') {
+      localStorage.removeItem(this.tokenKey);
+      sessionStorage.removeItem(this.tokenKey);
+      return;
+    }
+    storage.removeItem(this.tokenKey);
   }
 }

@@ -61,6 +61,8 @@ export class MembersComponent {
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Membres', href: '/members', active: true, accent: 'purple' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
+    { label: 'Spécialités', href: '/specialties' },
+    { label: 'Hopitaux', href: 'hospitals' },
     { label: 'Pages', href: '#' },
     { label: 'Components', href: '#' },
     { label: 'Charts', href: '#' },

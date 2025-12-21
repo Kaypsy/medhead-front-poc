@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <div class="sidebar-section">
-    <p class="sidebar-heading">Main</p>
+    <p class="sidebar-heading">Menu</p>
     <nav>
       @for (link of mainLinks; track link.label) {
         <a class="sidebar-link" [class.active]="link.active" [href]="link.href" [attr.aria-current]="link.active ? 'page' : null">
@@ -12,7 +12,7 @@
   </div>
 
   <div class="sidebar-section">
-    <p class="sidebar-heading">Docs</p>
+    <p class="sidebar-heading">Documentation</p>
     <nav>
       @for (link of docLinks; track link.label) {
         <a class="sidebar-link" [href]="link.href">

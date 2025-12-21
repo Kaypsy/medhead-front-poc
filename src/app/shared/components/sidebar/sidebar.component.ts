@@ -21,18 +21,10 @@ export class SidebarComponent {
     { label: 'Dashboard', href: '/dashboard', active: true, accent: 'purple' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
-    { label: 'Pages', href: '#' },
-    { label: 'Components', href: '#' },
-    { label: 'Charts', href: '#' },
-    { label: 'Forms', href: '#' },
-    { label: 'Tables', href: '#' }
+    { label: 'Spécialités', href: '/specialties' },
+    { label: 'Hopitaux', href: '/hospitals' }
   ];
-
   @Input() docLinks: SidebarLink[] = [
-    { label: 'Introduction', href: '#' },
-    { label: 'Directory structure', href: '#' },
-    { label: 'Gulp.js', href: '#' },
-    { label: 'CSS', href: '#' },
-    { label: 'Credits', href: '#' }
+    { label: 'FAQ', href: '#' }
   ];
 }

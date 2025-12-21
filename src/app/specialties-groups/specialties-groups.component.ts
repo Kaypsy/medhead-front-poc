@@ -46,6 +46,8 @@ export class SpecialtiesGroupsComponent {
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups', active: true, accent: 'purple' },
+    { label: 'Spécialités', href: '/specialties' },
+    { label: 'Hopitaux', href: 'hospitals' },
     { label: 'Pages', href: '#' },
     { label: 'Components', href: '#' },
     { label: 'Charts', href: '#' },

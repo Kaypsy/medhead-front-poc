@@ -1,0 +1,159 @@
+<div class="specialties">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Gestion</p>
+          <h1>Spécialités</h1>
+          <p class="subtitle">Liste des spécialités enregistrées</p>
+        </div>
+        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter une spécialité</button>
+      </header>
+
+      @if (statusMessage) {
+        <div class="alert" [class.error]="statusType === 'error'">
+          {{ statusMessage }}
+        </div>
+      }
+
+      @if (loadError) {
+        <div class="alert error">
+          {{ loadError }}
+        </div>
+      }
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Spécialités</h2>
+          @if (total$ | async; as total) {
+            <span class="count">{{ total }} au total</span>
+          }
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Groupe</th>
+                <th>Statut</th>
+                <th>Date de création</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (loading) {
+                <tr>
+                  <td colspan="6" class="empty">Chargement des spécialités...</td>
+                </tr>
+              } @else {
+                @if (specialties$ | async; as specialties) {
+                  @if (specialties.length === 0) {
+                    <tr>
+                      <td colspan="6" class="empty">Aucune spécialité trouvée.</td>
+                    </tr>
+                  } @else {
+                    @for (specialty of specialties; track specialty.id) {
+                      <tr>
+                        <td>{{ specialty.code }}</td>
+                        <td>{{ specialty.name }}</td>
+                        <td>{{ specialty.specialtyGroup?.name || '-' }}</td>
+                        <td>
+                          <span class="status" [class.active]="specialty.isActive" [class.inactive]="!specialty.isActive">
+                            {{ specialty.isActive ? 'Actif' : 'Inactif' }}
+                          </span>
+                        </td>
+                        <td>{{ specialty.createdAt | date: 'mediumDate' }}</td>
+                        <td>
+                          <div class="actions">
+                            <button type="button" class="btn ghost" (click)="onEdit(specialty)">Modifier</button>
+                            <button type="button" class="btn danger" (click)="onDelete(specialty)">Supprimer</button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  @if (showCreateModal) {
+    <div class="modal-backdrop" (click)="onCloseCreateModal()"></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-specialty-title">
+      <header class="modal-header">
+        <h3 id="create-specialty-title">Ajouter une spécialité</h3>
+        <button type="button" class="icon-btn" (click)="onCloseCreateModal()" aria-label="Fermer">
+          ✕
+        </button>
+      </header>
+      <form class="modal-body" [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+        <label class="confirm-label">
+          Nom
+          <input type="text" formControlName="name" autocomplete="off" />
+        </label>
+        @if (nameControl.touched && nameControl.invalid) {
+          <div class="field-error">Le nom est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Code
+          <input type="text" formControlName="code" readonly />
+        </label>
+        @if (codeControl.touched && codeControl.invalid) {
+          <div class="field-error">Le code est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Groupe de spécialité
+          <select formControlName="specialtyGroupId">
+            <option value="" disabled>Choisir un groupe</option>
+            @if (groupsLoading) {
+              <option value="" disabled>Chargement des groupes...</option>
+            } @else {
+              @if (groups$ | async; as groups) {
+                @if (groups.length === 0) {
+                  <option value="" disabled>Aucun groupe disponible</option>
+                } @else {
+                  @for (group of groups; track group.id) {
+                    <option [value]="group.id">{{ group.name }}</option>
+                  }
+                }
+              }
+            }
+          </select>
+        </label>
+        @if (specialtyGroupControl.touched && specialtyGroupControl.invalid) {
+          <div class="field-error">Le groupe est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Description
+          <textarea rows="3" formControlName="description"></textarea>
+        </label>
+
+        @if (groupsLoadError) {
+          <div class="alert error">{{ groupsLoadError }}</div>
+        }
+        @if (createError) {
+          <div class="alert error">{{ createError }}</div>
+        }
+      </form>
+      <footer class="modal-footer">
+        <button type="button" class="btn ghost" (click)="onCloseCreateModal()" [disabled]="isCreating">Annuler</button>
+        <button type="button" class="btn primary" (click)="onSubmitCreate()" [disabled]="!canSubmitCreate">
+          @if (isCreating) { Création... } @else { Créer la spécialité }
+        </button>
+      </footer>
+    </div>
+  }
+</div>

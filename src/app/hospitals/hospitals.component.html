@@ -1,0 +1,187 @@
+<div class="hospitals">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Gestion</p>
+          <h1>Hopitaux</h1>
+          <p class="subtitle">Liste des hopitaux enregistres</p>
+        </div>
+        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un groupe</button>
+      </header>
+
+      @if (statusMessage) {
+        <div class="alert" [class.error]="statusType === 'error'">
+          {{ statusMessage }}
+        </div>
+      }
+
+      @if (loadError) {
+        <div class="alert error">
+          {{ loadError }}
+        </div>
+      }
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Hopitaux</h2>
+          <span class="count" *ngIf="total$ | async as total">{{ total }} au total</span>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Nom de l'hopital</th>
+                <th>Ville</th>
+                <th>Nombre de lits disponibles</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (loading) {
+                <tr>
+                  <td colspan="6" class="empty">Chargement des hopitaux...</td>
+                </tr>
+              } @else {
+                @if (hospitals$ | async; as hospitals) {
+                  @if (hospitals.length === 0) {
+                    <tr>
+                      <td colspan="6" class="empty">Aucun hopital trouve.</td>
+                    </tr>
+                  } @else {
+                    @for (hospital of hospitals; track hospital.id) {
+                      <tr>
+                        <td>{{ hospital.name }}</td>
+                        <td>{{ hospital.city }}</td>
+                        <td>{{ hospital.availableBeds }}</td>
+                        <td>{{ hospital.latitude }}</td>
+                        <td>{{ hospital.longitude }}</td>
+                        <td>
+                          <div class="actions">
+                            <button type="button" class="btn ghost" (click)="onEdit(hospital)">Modifier</button>
+                            <button type="button" class="btn danger" (click)="onDelete(hospital)">Supprimer</button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  @if (showCreateModal) {
+    <div class="modal-backdrop" (click)="onCloseCreateModal()"></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-hospital-title">
+      <header class="modal-header">
+        <h3 id="create-hospital-title">Ajouter un hôpital</h3>
+        <button type="button" class="icon-btn" (click)="onCloseCreateModal()" aria-label="Fermer">
+          ✕
+        </button>
+      </header>
+      <form class="modal-body" [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+        <label class="confirm-label">
+          Nom de l'hôpital
+          <input type="text" formControlName="name" autocomplete="off" />
+        </label>
+        @if (nameControl.touched && nameControl.invalid) {
+          <div class="field-error">Le nom de l'hôpital est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Adresse
+          <input type="text" formControlName="address" autocomplete="off" />
+        </label>
+        @if (addressControl.touched && addressControl.invalid) {
+          <div class="field-error">L'adresse est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Ville
+          <input type="text" formControlName="city" autocomplete="off" />
+        </label>
+        @if (cityControl.touched && cityControl.invalid) {
+          <div class="field-error">La ville est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Code postal
+          <input type="text" formControlName="postalCode" autocomplete="off" />
+        </label>
+        @if (postalCodeControl.touched && postalCodeControl.invalid) {
+          <div class="field-error">Le code postal est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Total de lits
+          <input type="number" min="0" formControlName="totalBeds" />
+        </label>
+        @if (totalBedsControl.touched && totalBedsControl.invalid) {
+          <div class="field-error">Le total de lits est obligatoire.</div>
+        }
+
+        <label class="confirm-label">
+          Téléphone
+          <input type="tel" formControlName="phoneNumber" autocomplete="off" />
+        </label>
+
+        <label class="confirm-label">
+          Latitude
+          <input type="number" step="0.000001" formControlName="latitude" />
+        </label>
+
+        <label class="confirm-label">
+          Longitude
+          <input type="number" step="0.000001" formControlName="longitude" />
+        </label>
+
+        <label class="confirm-label">
+          Spécialités
+          <select formControlName="specialtyIds" multiple size="5" [disabled]="specialtiesLoading">
+            @if (specialtiesLoading) {
+              <option>Chargement des spécialités...</option>
+            } @else {
+              @if (specialties.length === 0) {
+                <option disabled>Aucune spécialité disponible</option>
+              } @else {
+                @for (specialty of specialties; track specialty.id) {
+                  <option [ngValue]="specialty.id">{{ specialty.name }}</option>
+                }
+              }
+            }
+          </select>
+        </label>
+        @if (specialtyIdsControl.touched && specialtyIdsControl.invalid) {
+          <div class="field-error">Sélectionnez au moins une spécialité.</div>
+        }
+
+        @if (specialtiesError) {
+          <div class="alert error">{{ specialtiesError }}</div>
+        }
+
+        @if (createError) {
+          <div class="alert error">{{ createError }}</div>
+        }
+      </form>
+      <footer class="modal-footer">
+        <button type="button" class="btn ghost" (click)="onCloseCreateModal()" [disabled]="isCreating">
+          Annuler
+        </button>
+        <button type="button" class="btn primary" (click)="onSubmitCreate()" [disabled]="!canSubmitCreate">
+          @if (isCreating) { Création... } @else { Ajouter l'hôpital }
+        </button>
+      </footer>
+    </div>
+  }
+</div>

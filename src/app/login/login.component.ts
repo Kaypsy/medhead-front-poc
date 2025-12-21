@@ -26,6 +26,19 @@ export class LoginComponent {
 
   errorMessage = '';
   loading = false;
+  showPassword = false;
+
+  get passwordFieldType(): 'password' | 'text' {
+    return this.showPassword ? 'text' : 'password';
+  }
+
+  get passwordToggleLabel(): string {
+    return this.showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe';
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
@@ -36,7 +49,9 @@ export class LoginComponent {
     this.errorMessage = '';
     this.loading = true;
 
-    this.auth.login(this.loginForm.getRawValue()).subscribe({
+    const { username, password, remember } = this.loginForm.getRawValue();
+
+    this.auth.login({ username, password }, remember).subscribe({
       next: async () => {
         this.loading = false;
         const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';

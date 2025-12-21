@@ -32,6 +32,18 @@ export const routes: Routes = [
     canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
   },
   {
+    path: 'specialties',
+    loadComponent: () =>
+      import('./specialties/specialties.component').then((m) => m.SpecialtiesComponent),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
+    path: 'hospitals',
+    loadComponent: () =>
+      import('./hospitals/hospitals.component').then((m) => m.HospitalsComponent),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
     path: '**',
     redirectTo: ''
   }
