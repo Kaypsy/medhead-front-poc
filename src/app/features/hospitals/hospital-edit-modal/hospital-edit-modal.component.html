@@ -1,0 +1,128 @@
+<div class="modal-backdrop" (click)="onBackdropClick()"></div>
+<div
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="edit-hospital-title"
+  (click)="$event.stopPropagation()"
+>
+  <header class="modal-header">
+    <h3 id="edit-hospital-title">Modifier l'hôpital</h3>
+    <button type="button" class="icon-btn" (click)="requestClose()" aria-label="Fermer">
+      ✕
+    </button>
+  </header>
+
+  <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label class="confirm-label">
+      Nom de l'hôpital
+      <input #nameInput type="text" formControlName="name" autocomplete="off" />
+    </label>
+    @if (nameControl.touched && nameControl.invalid) {
+      <div class="field-error">Le nom de l'hôpital est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Adresse
+      <input type="text" formControlName="address" autocomplete="off" />
+    </label>
+    @if (addressControl.touched && addressControl.invalid) {
+      <div class="field-error">L'adresse est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Ville
+      <input type="text" formControlName="city" autocomplete="off" />
+    </label>
+    @if (cityControl.touched && cityControl.invalid) {
+      <div class="field-error">La ville est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Code postal
+      <input type="text" formControlName="postalCode" autocomplete="off" />
+    </label>
+    @if (postalCodeControl.touched && postalCodeControl.invalid) {
+      <div class="field-error">Le code postal doit contenir 5 chiffres.</div>
+    }
+
+    <label class="confirm-label">
+      Latitude
+      <input type="number" step="0.000001" formControlName="latitude" />
+    </label>
+    @if (latitudeControl.touched && latitudeControl.invalid) {
+      <div class="field-error">La latitude doit être comprise entre -90 et 90.</div>
+    }
+
+    <label class="confirm-label">
+      Longitude
+      <input type="number" step="0.000001" formControlName="longitude" />
+    </label>
+    @if (longitudeControl.touched && longitudeControl.invalid) {
+      <div class="field-error">La longitude doit être comprise entre -180 et 180.</div>
+    }
+
+    <label class="confirm-label">
+      Téléphone
+      <input type="tel" formControlName="phoneNumber" autocomplete="off" />
+    </label>
+    @if (phoneNumberControl.touched && phoneNumberControl.invalid) {
+      <div class="field-error">Le téléphone doit contenir 10 chiffres.</div>
+    }
+
+    <label class="confirm-label">
+      Nombre total de lits
+      <input type="number" min="0" step="1" formControlName="totalBeds" />
+    </label>
+    @if (totalBedsControl.touched && totalBedsControl.invalid) {
+      <div class="field-error">Le nombre de lits doit être supérieur ou égal à 0.</div>
+    }
+
+    <div class="confirm-label">
+      Actif
+      <div class="toggle">
+        <input type="checkbox" formControlName="isActive" />
+        <span>Hôpital actif</span>
+      </div>
+    </div>
+
+    <label class="confirm-label">
+      Spécialités
+      <select formControlName="specialtyIds" multiple size="5" [disabled]="specialtiesLoading">
+        @if (specialtiesLoading) {
+          <option>Chargement des spécialités...</option>
+        } @else {
+          @if (specialties.length === 0) {
+            <option disabled>Aucune spécialité disponible</option>
+          } @else {
+            @for (specialty of specialties; track specialty.id) {
+              <option [ngValue]="specialty.id">{{ specialty.name }}</option>
+            }
+          }
+        }
+      </select>
+    </label>
+
+    @if (specialtiesError) {
+      <div class="alert error">{{ specialtiesError }}</div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert error">{{ errorMessage }}</div>
+    }
+  </form>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn ghost" (click)="requestClose()" [disabled]="isSubmitting">
+      Annuler
+    </button>
+    <button type="button" class="btn primary" (click)="onSubmit()" [disabled]="isSubmitting">
+      @if (isSubmitting) {
+        <span class="spinner" aria-hidden="true"></span>
+        Enregistrement...
+      } @else {
+        Enregistrer
+      }
+    </button>
+  </footer>
+</div>

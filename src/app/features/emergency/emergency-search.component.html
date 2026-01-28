@@ -150,19 +150,11 @@
           @if (result) {
             <div class="result-grid">
               <div class="result-info">
-                <h3>{{ result.hospital.name }}</h3>
-                <p>{{ result.hospital.address }}</p>
-                <p>{{ result.hospital.postalCode }} {{ result.hospital.city }}</p>
-                @if (result.hospital.phoneNumber) {
-                  <p class="phone">{{ result.hospital.phoneNumber }}</p>
-                }
+                <h3>{{ result.name }}</h3>
+                <p>{{ result.city }}</p>
+                <p class="coords">{{ result.latitude }}, {{ result.longitude }}</p>
                 <div class="actions">
-                  @if (result.hospital.phoneNumber) {
-                    <a class="btn primary" [href]="'tel:' + result.hospital.phoneNumber">Appeler</a>
-                  } @else {
-                    <span class="btn disabled">Appel indisponible</span>
-                  }
-                  <a class="btn ghost" [href]="getDirectionsUrl(result.hospital)" target="_blank" rel="noreferrer">
+                  <a class="btn primary" [href]="getDirectionsUrl(result)" target="_blank" rel="noreferrer">
                     Itinéraire
                   </a>
                 </div>
@@ -170,16 +162,16 @@
 
               <div class="result-stats">
                 <div>
-                  <span>Spécialité</span>
-                  <strong>{{ result.specialty.name }}</strong>
+                  <span>Identifiant</span>
+                  <strong>#{{ result.id }}</strong>
                 </div>
                 <div>
                   <span>Lits disponibles</span>
                   <strong>{{ result.availableBeds }}</strong>
                 </div>
                 <div>
-                  <span>Distance</span>
-                  <strong>{{ result.distanceKm | number: '1.1-1' }} km</strong>
+                  <span>Ville</span>
+                  <strong>{{ result.city }}</strong>
                 </div>
               </div>
             </div>

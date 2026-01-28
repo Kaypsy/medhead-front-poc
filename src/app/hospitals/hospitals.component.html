@@ -81,6 +81,19 @@
     </main>
   </div>
 
+  @if (showEditModal) {
+    <app-hospital-edit-modal
+      [hospital]="selectedHospital"
+      [specialties]="specialties"
+      [specialtiesLoading]="specialtiesLoading"
+      [specialtiesError]="specialtiesError"
+      [isSubmitting]="isUpdating"
+      [errorMessage]="updateError"
+      (cancel)="onCloseEditModal()"
+      (save)="onSubmitEdit($event)"
+    />
+  }
+
   @if (showCreateModal) {
     <div class="modal-backdrop" (click)="onCloseCreateModal()"></div>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-hospital-title">

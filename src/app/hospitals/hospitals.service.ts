@@ -6,10 +6,17 @@ import { environment } from '../../environments/environment';
 export type Hospital = {
   id: number;
   name: string;
+  address?: string;
   city: string;
+  postalCode?: string;
   availableBeds: number;
+  totalBeds?: number;
   latitude: number;
   longitude: number;
+  phoneNumber?: string;
+  isActive?: boolean;
+  specialtyIds?: number[];
+  specialties?: Array<{ id: number; name?: string }>;
 };
 
 export type CreateHospitalPayload = {
@@ -21,6 +28,19 @@ export type CreateHospitalPayload = {
   longitude?: number;
   phoneNumber?: string;
   totalBeds: number;
+  specialtyIds: number[];
+};
+
+export type HospitalUpdateRequest = {
+  name: string;
+  address: string;
+  city: string;
+  postalCode?: string;
+  latitude: number;
+  longitude: number;
+  phoneNumber?: string;
+  totalBeds?: number;
+  isActive: boolean;
   specialtyIds: number[];
 };
 
@@ -63,5 +83,9 @@ export class HospitalsService {
 
   createHospital(payload: CreateHospitalPayload): Observable<Hospital> {
     return this.http.post<Hospital>(`${environment.apiUrl}/api/hospitals`, payload);
+  }
+
+  updateHospital(id: number, payload: HospitalUpdateRequest): Observable<Hospital> {
+    return this.http.put<Hospital>(`${environment.apiUrl}/api/hospitals/${id}`, payload);
   }
 }

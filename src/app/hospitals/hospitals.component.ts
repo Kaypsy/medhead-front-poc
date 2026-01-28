@@ -5,8 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
-import { CreateHospitalPayload, Hospital, HospitalsResponse, HospitalsService } from './hospitals.service';
+import { CreateHospitalPayload, Hospital, HospitalUpdateRequest, HospitalsResponse, HospitalsService } from './hospitals.service';
 import { SpecialtiesService, Specialty } from '../specialties/specialties.service';
+import { HospitalEditModalComponent } from '../features/hospitals/hospital-edit-modal/hospital-edit-modal.component';
 
 const emptyHospitalsResponse: HospitalsResponse = {
   totalElements: 0,
@@ -32,7 +33,7 @@ const emptyHospitalsResponse: HospitalsResponse = {
 @Component({
   selector: 'app-hospitals',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TopbarComponent, SidebarComponent],
+  imports: [CommonModule, ReactiveFormsModule, TopbarComponent, SidebarComponent, HospitalEditModalComponent],
   templateUrl: './hospitals.component.html',
   styleUrl: './hospitals.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -58,6 +59,10 @@ export class HospitalsComponent {
   showCreateModal = false;
   isCreating = false;
   createError = '';
+  showEditModal = false;
+  selectedHospital: Hospital | null = null;
+  isUpdating = false;
+  updateError = '';
 
   readonly createForm = this.fb.group({
     name: this.fb.control('', { validators: [Validators.required], nonNullable: true }),
@@ -76,7 +81,7 @@ export class HospitalsComponent {
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
-    { label: 'Hopitaux', href: 'hospitals', active: true, accent: 'purple' }
+    { label: 'Hopitaux', href: '/hospitals', active: true, accent: 'purple' }
   ];
 
   constructor() {
@@ -253,11 +258,74 @@ export class HospitalsComponent {
   }
 
   onEdit(hospital: Hospital): void {
-    void hospital;
+    this.selectedHospital = hospital;
+    this.updateError = '';
+    if (this.specialtiesError) {
+      this.loadSpecialties();
+    }
+    this.showEditModal = true;
   }
 
   onDelete(hospital: Hospital): void {
     void hospital;
+  }
+
+  onCloseEditModal(): void {
+    if (this.isUpdating) {
+      return;
+    }
+    this.showEditModal = false;
+    this.selectedHospital = null;
+    this.updateError = '';
+  }
+
+  onSubmitEdit(payload: HospitalUpdateRequest): void {
+    if (!this.selectedHospital) {
+      return;
+    }
+
+    this.isUpdating = true;
+    this.updateError = '';
+
+    this.service
+      .updateHospital(this.selectedHospital.id, payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.statusType = 'success';
+          this.statusMessage = `Hôpital ${updated.name} mis à jour.`;
+          this.isUpdating = false;
+          this.showEditModal = false;
+          this.selectedHospital = null;
+          this.loadHospitals();
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error('Update hospital failed', err);
+          this.isUpdating = false;
+          if (err?.status === 401) {
+            this.updateError = "Vous n'êtes pas authentifié.";
+          } else if (err?.status === 403) {
+            this.updateError = "Accès refusé. Vous n'avez pas les droits nécessaires.";
+          } else if (err?.status === 400) {
+            const apiErrors = err?.error?.errors;
+            if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+              this.updateError = apiErrors.join(' ');
+            } else if (apiErrors && typeof apiErrors === 'object') {
+              const details = Object.values(apiErrors).filter(Boolean).join(' ');
+              this.updateError = details || 'Requête invalide. Vérifiez les champs saisis.';
+            } else {
+              this.updateError = 'Requête invalide. Vérifiez les champs saisis.';
+            }
+          } else {
+            const apiMessage = err?.error?.message || err?.error?.error;
+            this.updateError = apiMessage
+              ? `Mise à jour impossible: ${apiMessage}`
+              : 'Mise à jour impossible. Vérifiez les champs et réessayez.';
+          }
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   private loadHospitals(): void {

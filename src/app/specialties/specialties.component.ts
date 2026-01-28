@@ -52,7 +52,7 @@ export class SpecialtiesComponent {
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties', active: true, accent: 'purple' },
-    { label: 'Hopitaux', href: 'hospitals' }
+    { label: 'Hopitaux', href: '/hospitals' }
   ];
 
   constructor() {

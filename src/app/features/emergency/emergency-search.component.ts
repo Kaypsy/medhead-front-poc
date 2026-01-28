@@ -16,7 +16,7 @@ import { SpecialtiesService, Specialty } from '../../specialties/specialties.ser
 import { EmergencyService } from '../../core/services/emergency.service';
 import { GeolocationService } from '../../core/services/geolocation.service';
 import { EmergencyRequest } from '../../models/emergency-request.model';
-import { EmergencyHospital, EmergencyResponse } from '../../models/emergency-response.model';
+import { EmergencyNearestHospital } from '../../models/emergency-nearest.model';
 
 const DEFAULT_LATITUDE = 48.8566;
 const DEFAULT_LONGITUDE = 2.3522;
@@ -55,7 +55,7 @@ export class EmergencySearchComponent implements OnInit {
   isSearching = false;
   searchError = '';
   responseTimeMs: number | null = null;
-  result: EmergencyResponse | null = null;
+  result: EmergencyNearestHospital | null = null;
   mapMarkers: MapMarkers | null = null;
 
   readonly searchForm = this.fb.group({
@@ -179,12 +179,20 @@ export class EmergencySearchComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          this.result = response;
+          const [hospital] = response ?? [];
+          if (!hospital) {
+            this.result = null;
+            this.mapMarkers = null;
+            this.searchError = 'Aucun hôpital disponible pour cette spécialité dans votre zone.';
+            this.cdr.markForCheck();
+            return;
+          }
+          this.result = hospital;
           this.mapMarkers = this.computeMarkers(
             payload.latitude,
             payload.longitude,
-            response.hospital.latitude,
-            response.hospital.longitude
+            hospital.latitude,
+            hospital.longitude
           );
           this.cdr.markForCheck();
         },
@@ -200,7 +208,7 @@ export class EmergencySearchComponent implements OnInit {
     return groupName ? `${specialty.name} (${groupName})` : specialty.name;
   }
 
-  getDirectionsUrl(hospital: EmergencyHospital): string {
+  getDirectionsUrl(hospital: EmergencyNearestHospital): string {
     return `https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`;
   }
 
