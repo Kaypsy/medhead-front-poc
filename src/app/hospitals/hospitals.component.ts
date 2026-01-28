@@ -64,8 +64,8 @@ export class HospitalsComponent {
     address: this.fb.control('', { validators: [Validators.required], nonNullable: true }),
     city: this.fb.control('', { validators: [Validators.required], nonNullable: true }),
     postalCode: this.fb.control('', { validators: [Validators.required], nonNullable: true }),
-    latitude: this.fb.control<number | null>(null),
-    longitude: this.fb.control<number | null>(null),
+    latitude: this.fb.control<number | null>(null, { validators: [Validators.required] }),
+    longitude: this.fb.control<number | null>(null, { validators: [Validators.required] }),
     phoneNumber: this.fb.control('', { nonNullable: true }),
     totalBeds: this.fb.control<number | null>(null, { validators: [Validators.required] }),
     specialtyIds: this.fb.nonNullable.control<number[]>([], { validators: [Validators.required] })
@@ -102,6 +102,14 @@ export class HospitalsComponent {
 
   get totalBedsControl() {
     return this.createForm.controls.totalBeds;
+  }
+
+  get latitudeControl() {
+    return this.createForm.controls.latitude;
+  }
+
+  get longitudeControl() {
+    return this.createForm.controls.longitude;
   }
 
   get specialtyIdsControl() {
@@ -173,11 +181,19 @@ export class HospitalsComponent {
     if (totalBedsValue === undefined || totalBedsValue < 0 || !Number.isInteger(totalBedsValue)) {
       this.totalBedsControl.setErrors({ required: true });
     }
+    const latitudeValue = this.toNumber(raw.latitude);
+    const longitudeValue = this.toNumber(raw.longitude);
+    if (latitudeValue === undefined) {
+      this.latitudeControl.setErrors({ required: true });
+    }
+    if (longitudeValue === undefined) {
+      this.longitudeControl.setErrors({ required: true });
+    }
     if (!this.createForm.valid || specialtyIdsValue.length === 0) {
       this.createForm.markAllAsTouched();
       return;
     }
-    if (totalBedsValue === undefined) {
+    if (totalBedsValue === undefined || latitudeValue === undefined || longitudeValue === undefined) {
       this.createForm.markAllAsTouched();
       return;
     }
@@ -189,8 +205,8 @@ export class HospitalsComponent {
       postalCode: postalCodeValue,
       totalBeds: totalBedsValue,
       specialtyIds: specialtyIdsValue,
-      latitude: this.toNumber(raw.latitude),
-      longitude: this.toNumber(raw.longitude),
+      latitude: latitudeValue,
+      longitude: longitudeValue,
       phoneNumber: raw.phoneNumber.trim() ? raw.phoneNumber.trim() : undefined
     };
 

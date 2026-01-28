@@ -140,11 +140,17 @@
           Latitude
           <input type="number" step="0.000001" formControlName="latitude" />
         </label>
+        @if (latitudeControl.touched && latitudeControl.invalid) {
+          <div class="field-error">La latitude est obligatoire.</div>
+        }
 
         <label class="confirm-label">
           Longitude
           <input type="number" step="0.000001" formControlName="longitude" />
         </label>
+        @if (longitudeControl.touched && longitudeControl.invalid) {
+          <div class="field-error">La longitude est obligatoire.</div>
+        }
 
         <label class="confirm-label">
           Spécialités

@@ -44,6 +44,22 @@ export const routes: Routes = [
     canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
   },
   {
+    path: 'emergency',
+    loadComponent: () =>
+      import('./features/emergency/emergency-search.component').then(
+        (m) => m.EmergencySearchComponent
+      ),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
+    path: 'emergency-search',
+    loadComponent: () =>
+      import('./emergency-search/emergency-search.component').then(
+        (m) => m.EmergencySearchComponent
+      ),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
     path: '**',
     redirectTo: ''
   }

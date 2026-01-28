@@ -1,0 +1,155 @@
+<div class="emergency-search">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Urgences</p>
+          <h1>Recherche d'hôpital en urgence</h1>
+          <p class="subtitle">
+            Trouver rapidement l'établissement le plus proche selon la localisation et la spécialité.
+          </p>
+        </div>
+      </header>
+
+      @if (statusMessage) {
+        <div class="alert" [class.error]="statusType === 'error'">
+          {{ statusMessage }}
+        </div>
+      }
+
+      <section class="form-card">
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <div class="form-section">
+              <h2>Localisation du patient</h2>
+              <button
+                type="button"
+                class="btn ghost"
+                (click)="onUseCurrentLocation()"
+                [disabled]="isLocating"
+              >
+                @if (isLocating) { Localisation en cours... } @else { Utiliser ma position actuelle }
+              </button>
+
+              @if (geoError) {
+                <div class="alert error small">{{ geoError }}</div>
+              }
+
+              <label class="confirm-label">
+                Latitude
+                <input type="number" step="0.000001" formControlName="latitude" />
+              </label>
+              @if (latitudeControl.touched && latitudeControl.invalid) {
+                <div class="field-error">La latitude est obligatoire.</div>
+              }
+
+              <label class="confirm-label">
+                Longitude
+                <input type="number" step="0.000001" formControlName="longitude" />
+              </label>
+              @if (longitudeControl.touched && longitudeControl.invalid) {
+                <div class="field-error">La longitude est obligatoire.</div>
+              }
+            </div>
+
+            <div class="form-section">
+              <h2>Spécialité requise</h2>
+              <label class="confirm-label">
+                Spécialité médicale
+                <select formControlName="specialtyCode" [disabled]="specialtiesLoading">
+                  @if (specialtiesLoading) {
+                    <option>Chargement des spécialités...</option>
+                  } @else {
+                    <option value="">Sélectionner une spécialité</option>
+                    @if (specialties.length === 0) {
+                      <option disabled>Aucune spécialité disponible</option>
+                    } @else {
+                      @for (specialty of specialties; track specialty.id) {
+                        <option [value]="specialty.code">{{ getSpecialtyLabel(specialty) }}</option>
+                      }
+                    }
+                  }
+                </select>
+              </label>
+              @if (specialtyControl.touched && specialtyControl.invalid) {
+                <div class="field-error">Veuillez sélectionner une spécialité médicale.</div>
+              }
+
+              @if (specialtiesError) {
+                <div class="alert error small">{{ specialtiesError }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn primary" [disabled]="!canSubmitSearch">
+              @if (isSearching) { Recherche en cours... } @else { Rechercher un hôpital }
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-card">
+        <header class="result-header">
+          <h2>Hôpital recommandé</h2>
+          @if (result) {
+            <span class="badge success">Disponible</span>
+          }
+        </header>
+
+        @if (isSearching) {
+          <p class="empty">Recherche de l'hôpital le plus proche...</p>
+        } @else {
+          @if (result) {
+            <div class="result-main">
+              <h3>{{ result.hospital.name }}</h3>
+              <p class="address">{{ result.hospital.address }}</p>
+              <p class="address">{{ result.hospital.postalCode }} {{ result.hospital.city }}</p>
+              @if (result.hospital.phoneNumber) {
+                <p class="phone">{{ result.hospital.phoneNumber }}</p>
+              }
+            </div>
+
+            <div class="result-meta">
+              <div>
+                <span class="label">Spécialité</span>
+                <span>{{ result.specialty.name }}</span>
+              </div>
+              <div>
+                <span class="label">Lits disponibles</span>
+                <span>{{ result.availableBeds }}</span>
+              </div>
+              <div>
+                <span class="label">Distance</span>
+                <span>{{ result.distanceKm | number: '1.1-1' }} km</span>
+              </div>
+              <div>
+                <span class="label">Temps estimé</span>
+                <span>{{ result.estimatedTimeMinutes | number: '1.0-0' }} min</span>
+              </div>
+            </div>
+
+            <div class="result-actions">
+              @if (result.hospital.phoneNumber) {
+                <a class="btn primary" [href]="'tel:' + result.hospital.phoneNumber">Appeler</a>
+              } @else {
+                <span class="btn disabled">Appel indisponible</span>
+              }
+              <a class="btn ghost" [href]="getDirectionsUrl(result.hospital)" target="_blank" rel="noreferrer">
+                Itinéraire
+              </a>
+            </div>
+          } @else {
+            <p class="empty">
+              Renseignez la localisation du patient et la spécialité pour lancer la recherche.
+            </p>
+          }
+        }
+      </section>
+    </main>
+  </div>
+</div>

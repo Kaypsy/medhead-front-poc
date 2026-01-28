@@ -23,54 +23,13 @@
 
         <label class="input-group">
           <span class="input-label">Mot de passe</span>
-          <div class="password-wrapper">
-            <input
-              [type]="passwordFieldType"
-              formControlName="password"
-              name="password"
-              autocomplete="current-password"
-              [class.invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
-            />
-            <button
-              class="password-toggle"
-              type="button"
-              [attr.aria-label]="passwordToggleLabel"
-              [attr.title]="passwordToggleLabel"
-              [attr.aria-pressed]="showPassword"
-              (mousedown)="$event.preventDefault()"
-              (touchstart)="$event.preventDefault()"
-              (click)="togglePasswordVisibility()"
-            >
-              @if (showPassword) {
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8" />
-                </svg>
-              } @else {
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    d="M4.5 6.5 19.5 17.5M3 12s3.5-6 9-6c2.5 0 4.6 1.2 6.1 2.6M21 12s-3.5 6-9 6c-2.2 0-4.2-0.9-5.7-2.1"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M9.2 9.3a3 3 0 0 0 4.2 4.2"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              }
-            </button>
-          </div>
+          <input
+            type="password"
+            formControlName="password"
+            name="password"
+            autocomplete="current-password"
+            [class.invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+          />
           @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
             <span class="error">Indiquez votre mot de passe.</span>
           }

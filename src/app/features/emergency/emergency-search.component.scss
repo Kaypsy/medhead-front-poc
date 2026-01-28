@@ -1,0 +1,465 @@
+.emergency-page {
+  min-height: 100vh;
+  background: #f6f7fb;
+  color: #0f172a;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  align-items: start;
+}
+
+.content {
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 2rem;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0;
+  color: #64748b;
+}
+
+.header-meta {
+  display: grid;
+  gap: 0.8rem;
+  min-width: 220px;
+}
+
+.meta-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.meta-card strong {
+  color: #0f172a;
+  font-size: 1.1rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.alert {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.form-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.geo-status {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.geo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.geo-badge.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.geo-badge.warning {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.geo-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.geo-error {
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.field span {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.field input,
+.field select {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.field small {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn.primary {
+  background: #5a36ff;
+  color: #fff;
+  box-shadow: 0 12px 20px rgba(90, 54, 255, 0.2);
+}
+
+.btn.primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.btn.ghost {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.btn.disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.dark {
+  border-color: rgba(15, 23, 42, 0.2);
+  border-top-color: #0f172a;
+}
+
+.geo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  grid-column: span 2;
+}
+
+.loading-block {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #64748b;
+}
+
+.result-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.result-card h2 {
+  margin: 0;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.result-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.result-info p {
+  margin: 0.15rem 0;
+  color: #475569;
+}
+
+.result-info .phone {
+  color: #0f172a;
+  font-weight: 600;
+  margin-top: 0.6rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.result-stats {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.result-stats span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.result-stats strong {
+  font-size: 1.1rem;
+}
+
+.performance {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 18px;
+  padding: 1rem 1.25rem;
+}
+
+.performance span {
+  color: #cbd5f5;
+  font-size: 0.85rem;
+}
+
+.performance strong {
+  font-size: 1.1rem;
+  display: block;
+}
+
+.empty {
+  color: #64748b;
+  margin: 0;
+}
+
+.map-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.map-card header span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.map {
+  position: relative;
+  height: 260px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(90, 54, 255, 0.15), transparent 60%),
+    radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.15), transparent 60%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.06) 0,
+      rgba(15, 23, 42, 0.06) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(15, 23, 42, 0.06) 0,
+      rgba(15, 23, 42, 0.06) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    #f8fafc;
+  overflow: hidden;
+}
+
+.marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.2);
+}
+
+.marker.patient {
+  background: #ef4444;
+}
+
+.marker.hospital {
+  background: #10b981;
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.legend .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.4rem;
+}
+
+.legend .dot.patient {
+  background: #ef4444;
+}
+
+.legend .dot.hospital {
+  background: #10b981;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1100px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .geo-actions {
+    grid-column: span 2;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .performance {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-meta {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .geo-actions {
+    grid-column: span 1;
+  }
+
+  .header-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
