@@ -3,7 +3,14 @@
     <p class="sidebar-heading">Menu</p>
     <nav>
       @for (link of mainLinks; track link.label) {
-        <a class="sidebar-link" [class.active]="link.active" [href]="link.href" [attr.aria-current]="link.active ? 'page' : null">
+        <a
+          class="sidebar-link"
+          [routerLink]="link.href"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+          [attr.aria-current]="rla.isActive ? 'page' : null"
+        >
           <span class="icon-dot" [ngClass]="link.accent"></span>
           {{ link.label }}
         </a>

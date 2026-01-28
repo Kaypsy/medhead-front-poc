@@ -67,12 +67,11 @@ export class EmergencySearchComponent implements OnInit {
   });
 
   readonly mainLinks = [
-     { label: 'Trouver un hopital', href: '/emergency' },
+    { label: 'Trouver un hopital', href: '/emergency', active: true, accent: 'purple' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
-    { label: 'Hopitaux', href: '/hospitals' },
-    //{ label: 'Urgences', href: '/emergency', active: true, accent: 'purple' }
+    { label: 'Hopitaux', href: '/hospitals' }
   ];
 
   constructor() {
