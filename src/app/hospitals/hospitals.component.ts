@@ -72,7 +72,7 @@ export class HospitalsComponent {
   });
 
   readonly mainLinks = [
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Trouver un hopital', href: '/emergency' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },

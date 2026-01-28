@@ -58,7 +58,7 @@ export class MembersComponent {
   });
 
   readonly mainLinks = [
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Trouver un hopital', href: '/emergency' },
     { label: 'Membres', href: '/members', active: true, accent: 'purple' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },

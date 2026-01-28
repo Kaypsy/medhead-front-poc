@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'dashboard'
+    redirectTo: 'emergency'
   },
   {
     path: 'login',
@@ -13,9 +13,8 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () =>
-      import('./dashboard/dashboard.component').then((m) => m.DashboardComponent),
-    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+    pathMatch: 'full',
+    redirectTo: 'emergency'
   },
   {
     path: 'members',

@@ -18,7 +18,7 @@ export type LoginPayload = {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenKey = 'auth_token';
-  readonly dashboardUrl = '/dashboard';
+  readonly dashboardUrl = '/emergency';
 
   login(payload: LoginPayload, remember = false): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/login`, payload).pipe(

@@ -18,7 +18,7 @@ type SidebarLink = {
 })
 export class SidebarComponent {
   @Input() mainLinks: SidebarLink[] = [
-    { label: 'Dashboard', href: '/dashboard', active: true, accent: 'purple' },
+    { label: 'Trouver un hopital', href: '/emergency', active: true, accent: 'purple' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
