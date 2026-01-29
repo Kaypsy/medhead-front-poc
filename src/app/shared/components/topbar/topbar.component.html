@@ -7,11 +7,64 @@
 
   <div class="brand">{{ brand }}</div>
 
-  <form class="search">
+  <form class="search" role="search" (submit)="$event.preventDefault()">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 0l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
-    <input type="search" [placeholder]="searchPlaceholder" aria-label="Search" />
+    <input
+      type="search"
+      [placeholder]="searchPlaceholder"
+      aria-label="Rechercher un hôpital"
+      role="combobox"
+      aria-autocomplete="list"
+      [attr.aria-expanded]="showDropdown"
+      [attr.aria-controls]="'hospital-search-listbox'"
+      [attr.aria-activedescendant]="activeDescendantId"
+      [formControl]="hospitalSearchControl"
+      [disabled]="isInitialLoading"
+      (keydown)="onSearchKeydown($event)"
+      (focus)="openDropdown()"
+    />
+    @if (showDropdown) {
+      <div class="search-dropdown" role="listbox" id="hospital-search-listbox" [attr.aria-busy]="hospitalsLoading">
+        @if (hospitalsLoading) {
+          <div class="search-status" role="status">
+            <span class="spinner" aria-hidden="true"></span>
+            Chargement...
+          </div>
+        } @else if (hospitalsError) {
+          <div class="search-status error" role="alert">
+            {{ hospitalsError }}
+          </div>
+        } @else {
+          @if (filteredHospitals$ | async; as hospitals) {
+            @if (hospitals.length === 0) {
+              <div class="search-status empty">Aucun hôpital ne correspond à la recherche.</div>
+            } @else {
+              <ul class="search-list">
+                @for (hospital of hospitals; track hospital.id; let index = $index) {
+                  <li>
+                    <button
+                      type="button"
+                      class="search-option"
+                      role="option"
+                      [attr.id]="'hospital-option-' + index"
+                      [attr.aria-selected]="index === activeIndex"
+                      [class.active]="index === activeIndex"
+                      (click)="onHospitalSelected(hospital.id)"
+                      (mouseenter)="setActiveIndex(index)"
+                    >
+                      <span class="option-name" [innerHTML]="getHighlightedText(hospital.name)"></span>
+                      <span class="option-city" [innerHTML]="getHighlightedText(hospital.city)"></span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        }
+      </div>
+    }
   </form>
 
   <div class="top-actions">

@@ -19,44 +19,6 @@
   </div>
 
   <div class="sidebar-section">
-    <p class="sidebar-heading">Lits</p>
-    <label class="sidebar-label" for="sidebar-hospital-select">Hôpital</label>
-    @if (hospitalsLoading) {
-      <div class="sidebar-skeleton" aria-hidden="true"></div>
-    }
-    <select
-      id="sidebar-hospital-select"
-      class="sidebar-select"
-      [disabled]="hospitalsLoading || !!hospitalsError"
-      (change)="onHospitalSelect($any($event.target).value)"
-      [value]="selectedHospitalId ?? ''"
-    >
-      <option value="">Choisir un hôpital</option>
-      @if (hospitalsLoading) {
-        <option value="" disabled>Chargement...</option>
-      } @else {
-        @if (hospitals.length === 0) {
-          <option value="" disabled>Aucun hôpital disponible</option>
-        } @else {
-          @for (hospital of hospitals; track hospital.id) {
-            <option [value]="hospital.id">{{ hospital.name }}</option>
-          }
-        }
-      }
-    </select>
-    @if (hospitalsError) {
-      <p class="sidebar-helper error">{{ hospitalsError }}</p>
-    }
-    @if (selectedHospitalId) {
-      <a class="sidebar-link bed-link" [routerLink]="['/hospitals', selectedHospitalId, 'beds']">
-        Gérer les lits
-      </a>
-    } @else {
-      <span class="sidebar-link bed-link disabled">Gérer les lits</span>
-    }
-  </div>
-
-  <div class="sidebar-section">
     <p class="sidebar-heading">Documentation</p>
     <nav>
       @for (link of docLinks; track link.label) {
