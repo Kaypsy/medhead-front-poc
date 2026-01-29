@@ -29,6 +29,11 @@ export class LoginComponent {
   showPassword = false;
 
   ngOnInit(): void {
+    const notice = this.auth.consumeAuthNotice();
+    if (notice) {
+      this.errorMessage = notice;
+    }
+
     if (this.auth.isAuthenticated) {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
       const targetUrl = this.auth.resolveRedirectUrl(returnUrl);

@@ -68,8 +68,7 @@ export const routes: Routes = [
   },
   {
     path: 'faq',
-    loadComponent: () => import('./faq/faq.component').then((m) => m.FaqComponent),
-    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+    loadComponent: () => import('./faq/faq.component').then((m) => m.FaqComponent)
   },
   {
     path: '**',

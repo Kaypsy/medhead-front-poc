@@ -108,7 +108,6 @@ export class TopbarComponent {
 
   onLogout(): void {
     this.auth.logout();
-    void this.router.navigate(['/login']);
   }
 
   onHospitalSelected(hospitalId: number): void {

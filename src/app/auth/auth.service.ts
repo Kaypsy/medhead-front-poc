@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../environments/environment';
 
 export type AuthResponse = {
@@ -17,7 +19,9 @@ export type LoginPayload = {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly tokenKey = 'auth_token';
+  private readonly noticeKey = 'auth_notice';
   readonly dashboardUrl = '/emergency';
 
   login(payload: LoginPayload, remember = false): Observable<AuthResponse> {
@@ -29,15 +33,16 @@ export class AuthService {
   }
 
   logout(): void {
-    this.clearStoredToken();
+    this.clearSession();
+    void this.router.navigate(['/login']);
   }
 
   get token(): string | null {
-    return localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
+    return this.getToken();
   }
 
   get isAuthenticated(): boolean {
-    return Boolean(this.token);
+    return this.isTokenValid(this.token);
   }
 
   resolveRedirectUrl(returnUrl?: string | null): string {
@@ -48,6 +53,61 @@ export class AuthService {
       return this.dashboardUrl;
     }
     return returnUrl;
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
+  }
+
+  isTokenValid(token?: string | null): boolean {
+    return this.getTokenStatus(token) === 'valid';
+  }
+
+  getTokenStatus(token?: string | null): 'missing' | 'valid' | 'expired' | 'invalid' {
+    if (!token) {
+      return 'missing';
+    }
+    const decoded = this.decodeToken(token);
+    if (!decoded || typeof decoded.exp !== 'number') {
+      return 'invalid';
+    }
+    return this.isTokenExpired(token) ? 'expired' : 'valid';
+  }
+
+  clearSession(message?: string): void {
+    this.clearStoredToken();
+    if (message) {
+      this.setAuthNotice(message);
+    }
+  }
+
+  consumeAuthNotice(): string | null {
+    const notice = sessionStorage.getItem(this.noticeKey);
+    if (notice) {
+      sessionStorage.removeItem(this.noticeKey);
+    }
+    return notice;
+  }
+
+  decodeToken(token: string): { exp?: number } | null {
+    try {
+      return jwtDecode<{ exp?: number }>(token);
+    } catch {
+      return null;
+    }
+  }
+
+  isTokenExpired(token: string): boolean {
+    const decoded = this.decodeToken(token);
+    if (!decoded || typeof decoded.exp !== 'number') {
+      return true;
+    }
+    const expirationDate = decoded.exp * 1000;
+    return Date.now() >= expirationDate;
+  }
+
+  private setAuthNotice(message: string): void {
+    sessionStorage.setItem(this.noticeKey, message);
   }
 
   private storeToken(token: string, remember: boolean): void {
