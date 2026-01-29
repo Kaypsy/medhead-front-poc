@@ -1,0 +1,141 @@
+<div class="faq-page">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Documentation</p>
+          <h1>FAQ</h1>
+          <p class="subtitle">
+            Retrouvez les réponses essentielles sur l'allocation de lits d'urgence et les usages clés de MedHead.
+          </p>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn ghost" (click)="expandAll()">Tout ouvrir</button>
+          <button type="button" class="btn ghost" (click)="collapseAll()">Tout fermer</button>
+        </div>
+      </header>
+
+      <section class="card search-card" aria-label="Recherche dans la FAQ">
+        <div class="search-row">
+          <label class="search-field" for="faq-search">
+            <span>Rechercher une question</span>
+            <input
+              id="faq-search"
+              type="search"
+              [formControl]="searchControl"
+              placeholder="Ex: disponibilité des lits, cardiologie..."
+              autocomplete="off"
+            />
+          </label>
+          <button type="button" class="btn ghost" (click)="clearSearch()" [disabled]="!searchTerm">
+            Réinitialiser
+          </button>
+        </div>
+        <div class="search-meta" aria-live="polite">
+          <span>{{ filteredFaqs.length }} question(s)</span>
+          @if (searchTerm) {
+            <span class="badge">Filtre : "{{ searchTerm }}"</span>
+          }
+        </div>
+      </section>
+
+      @if (showPopular) {
+        <section class="card popular-card" aria-label="Questions populaires">
+          <header class="card-header">
+            <h2>Questions populaires</h2>
+            <p>Accédez rapidement aux réponses les plus consultées.</p>
+          </header>
+          <div class="popular-list">
+            @for (item of popularFaqs; track item.id) {
+              <button type="button" class="popular-pill" (click)="jumpToItem(item)">
+                {{ item.question }}
+              </button>
+            }
+          </div>
+        </section>
+      }
+
+      @if (groupedFaqs.length === 0) {
+        <div class="card empty-state">
+          <h2>Aucun résultat</h2>
+          <p>Essayez un autre mot-clé ou réinitialisez le filtre.</p>
+        </div>
+      } @else {
+        @for (group of groupedFaqs; track group.id) {
+          <section class="faq-section" [attr.aria-labelledby]="'faq-category-' + group.id">
+            <header class="section-header">
+              <h2 id="faq-category-{{ group.id }}">{{ group.category }}</h2>
+              <span>{{ group.items.length }} question(s)</span>
+            </header>
+
+            <div class="faq-list">
+              @for (item of group.items; track item.id) {
+                <article
+                  class="faq-item"
+                  [class.expanded]="item.expanded"
+                  id="question-{{ item.id }}"
+                >
+                  <button
+                    type="button"
+                    class="faq-trigger"
+                    id="question-{{ item.id }}-trigger"
+                    [attr.aria-expanded]="item.expanded"
+                    [attr.aria-controls]="'answer-' + item.id"
+                    (click)="toggleItem(item)"
+                  >
+                    <span class="faq-question">{{ item.question }}</span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="answer-{{ item.id }}"
+                    role="region"
+                    [attr.aria-labelledby]="'question-' + item.id + '-trigger'"
+                    [attr.aria-hidden]="!item.expanded"
+                  >
+                    <p>{{ item.answer }}</p>
+                    <div class="faq-feedback">
+                      <span>Cette réponse vous a-t-elle été utile ?</span>
+                      <div class="feedback-actions">
+                        <button
+                          type="button"
+                          class="btn ghost"
+                          [class.selected]="item.feedback === 'yes'"
+                          (click)="recordFeedback(item, 'yes')"
+                        >
+                          Oui
+                        </button>
+                        <button
+                          type="button"
+                          class="btn ghost"
+                          [class.selected]="item.feedback === 'no'"
+                          (click)="recordFeedback(item, 'no')"
+                        >
+                          Non
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              }
+            </div>
+          </section>
+        }
+      }
+
+      <section class="card contact-card">
+        <div>
+          <h2>Vous ne trouvez pas votre réponse ?</h2>
+          <p>
+            Contactez l'équipe MedHead pour obtenir un accompagnement personnalisé ou proposer une nouvelle question.
+          </p>
+        </div>
+        <button type="button" class="btn primary">Contacter le support</button>
+      </section>
+    </main>
+  </div>
+</div>

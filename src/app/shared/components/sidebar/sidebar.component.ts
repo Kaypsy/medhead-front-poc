@@ -19,13 +19,13 @@ type SidebarLink = {
 })
 export class SidebarComponent {
   @Input() mainLinks: SidebarLink[] = [
-    { label: 'Trouver un hopital', href: '/emergency', active: true, accent: 'purple' },
+    { label: 'A proximité', href: '/emergency', active: true, accent: 'purple' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
     { label: 'Hopitaux', href: '/hospitals' }
   ];
   @Input() docLinks: SidebarLink[] = [
-    { label: 'FAQ', href: '#' }
+    { label: 'FAQ', href: '/faq' }
   ];
 }

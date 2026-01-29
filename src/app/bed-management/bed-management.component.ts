@@ -52,7 +52,7 @@ export class BedManagementComponent {
   specialtiesError = '';
 
   mainLinks: SidebarLink[] = [
-    { label: 'Trouver un hopital', href: '/emergency' },
+    { label: 'A proximité', href: '/emergency' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups' },
     { label: 'Spécialités', href: '/specialties' },
@@ -82,7 +82,7 @@ export class BedManagementComponent {
       }
       this.hospitalId = parsed;
       this.mainLinks = [
-        { label: 'Trouver un hopital', href: '/emergency' },
+        { label: 'A proximité', href: '/emergency' },
         { label: 'Membres', href: '/members' },
         { label: 'Groupe de spécialités', href: '/specialties-groups' },
         { label: 'Spécialités', href: '/specialties' },

@@ -65,7 +65,7 @@
                         <td>{{ specialty.specialtyGroup?.name || '-' }}</td>
                         <td>
                           <span class="status" [class.active]="specialty.isActive" [class.inactive]="!specialty.isActive">
-                            {{ specialty.isActive ? 'Actif' : 'Inactif' }}
+                            {{ specialty.isActive ? 'Active' : 'Inactive' }}
                           </span>
                         </td>
                         <td>{{ specialty.createdAt | date: 'mediumDate' }}</td>

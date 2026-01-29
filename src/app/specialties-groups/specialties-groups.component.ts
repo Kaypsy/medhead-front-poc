@@ -43,7 +43,7 @@ export class SpecialtiesGroupsComponent {
   });
 
   readonly mainLinks = [
-    { label: 'Trouver un hopital', href: '/emergency' },
+    { label: 'A proximité', href: '/emergency' },
     { label: 'Membres', href: '/members' },
     { label: 'Groupe de spécialités', href: '/specialties-groups', active: true, accent: 'purple' },
     { label: 'Spécialités', href: '/specialties' },
