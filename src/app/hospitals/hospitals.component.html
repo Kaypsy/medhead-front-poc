@@ -11,7 +11,10 @@
           <h1>Hopitaux</h1>
           <p class="subtitle">Liste des hopitaux enregistres</p>
         </div>
-        <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un hôpital</button>
+        <div class="actions">
+          <button type="button" class="btn ghost" (click)="onOpenBedModal()">Ajouter un lit</button>
+          <button type="button" class="btn primary" (click)="onOpenCreateModal()">Ajouter un hôpital</button>
+        </div>
       </header>
 
       @if (statusMessage) {
@@ -65,6 +68,15 @@
                         <td>{{ hospital.longitude }}</td>
                         <td>
                           <div class="actions">
+                            <a
+                              class="btn ghost"
+                              [routerLink]="['/hospitals', hospital.id, 'beds']"
+                            >
+                              Gérer les lits
+                            </a>
+                            <button type="button" class="btn ghost" (click)="onOpenBedModal(hospital)">
+                              Ajouter un lit
+                            </button>
                             <button type="button" class="btn ghost" (click)="onEdit(hospital)">Modifier</button>
                             <button type="button" class="btn danger" (click)="onDelete(hospital)">Supprimer</button>
                           </div>
@@ -91,6 +103,22 @@
       [errorMessage]="updateError"
       (cancel)="onCloseEditModal()"
       (save)="onSubmitEdit($event)"
+    />
+  }
+
+  @if (showBedModal) {
+    <app-bed-form-modal
+      [hospitals]="hospitals"
+      [specialties]="specialties"
+      [hospitalsLoading]="loading"
+      [specialtiesLoading]="specialtiesLoading"
+      [hospitalsError]="loadError"
+      [specialtiesError]="specialtiesError"
+      [initialHospitalId]="bedHospitalId"
+      [isSubmitting]="isCreatingBed"
+      [errorMessage]="bedCreateError"
+      (save)="onSubmitBed($event)"
+      (cancel)="onCloseBedModal()"
     />
   }
 

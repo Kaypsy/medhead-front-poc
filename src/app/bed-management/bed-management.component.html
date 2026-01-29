@@ -1,0 +1,121 @@
+<div class="bed-management">
+  <app-topbar />
+
+  <div class="layout">
+    <app-sidebar [mainLinks]="mainLinks" />
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Gestion</p>
+          <h1>Lits</h1>
+          <p class="subtitle">
+            @if (hospitalId) {
+              Administration des lits pour l'hôpital #{{ hospitalId }}
+            } @else {
+              Administration des lits
+            }
+          </p>
+        </div>
+        <div class="header-actions">
+          <button
+            type="button"
+            class="btn primary"
+            (click)="onForceSync()"
+            [disabled]="!hospitalId || syncing"
+          >
+            @if (syncing) { Synchronisation... } @else { Forcer Sync }
+          </button>
+        </div>
+      </header>
+
+      @if (statusMessage) {
+        <div class="alert" [class.error]="statusType === 'error'">
+          {{ statusMessage }}
+        </div>
+      }
+
+      @if (loadError) {
+        <div class="alert error">
+          {{ loadError }}
+        </div>
+      }
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Lits</h2>
+          @if (total$ | async; as total) {
+            <span class="count">{{ total }} au total</span>
+          }
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>N° Lit</th>
+                <th>Spécialité</th>
+                <th>Hôpital</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (loading) {
+                <tr>
+                  <td colspan="4" class="empty">Chargement des lits...</td>
+                </tr>
+              } @else {
+                @if (beds$ | async; as beds) {
+                  @if (beds.length === 0) {
+                    <tr>
+                      <td colspan="4" class="empty">Aucun lit n'est disponible.</td>
+                    </tr>
+                  } @else {
+                    @for (bed of beds; track bed.id) {
+                      <tr
+                        [class.available]="bed.status === 'AVAILABLE'"
+                        [class.occupied]="bed.status === 'OCCUPIED'"
+                        [class.reserved]="bed.status === 'RESERVED'"
+                        [class.maintenance]="bed.status === 'MAINTENANCE'"
+                      >
+                        <td>{{ bedNumber(bed) }}</td>
+                        <td>{{ bedSpecialtyName(bed) }}</td>
+                        <td>{{ bedHospitalId(bed) }}</td>
+                        <td>
+                          <div class="status-cell">
+                            <span
+                              class="status-badge"
+                              [class.available]="bed.status === 'AVAILABLE'"
+                              [class.occupied]="bed.status === 'OCCUPIED'"
+                              [class.reserved]="bed.status === 'RESERVED'"
+                              [class.maintenance]="bed.status === 'MAINTENANCE'"
+                            >
+                              {{ statusLabel(bed.status) }}
+                            </span>
+                            <select
+                              class="status-select"
+                              [value]="bed.status"
+                              [disabled]="isUpdating(bed.id) || syncing"
+                              (change)="onStatusChange(bed, $any($event.target).value)"
+                            >
+                              @for (option of statusOptions; track option.value) {
+                                <option [value]="option.value">{{ option.label }}</option>
+                              }
+                            </select>
+                            @if (isUpdating(bed.id)) {
+                              <span class="mini-loader" aria-label="Mise à jour en cours"></span>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="modal-backdrop" (click)="onBackdropClick()"></div>
+<div
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="bed-form-title"
+  (click)="$event.stopPropagation()"
+>
+  <header class="modal-header">
+    <h3 id="bed-form-title">Ajouter un lit</h3>
+    <button type="button" class="icon-btn" (click)="requestClose()" aria-label="Fermer">
+      ✕
+    </button>
+  </header>
+
+  <form class="modal-body" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label class="confirm-label">
+      Hôpital
+      <select formControlName="hospitalId" [disabled]="hospitalsLoading">
+        <option value="" disabled>Choisir un hôpital</option>
+        @if (hospitalsLoading) {
+          <option disabled>Chargement des hôpitaux...</option>
+        } @else {
+          @if (hospitals.length === 0) {
+            <option disabled>Aucun hôpital disponible</option>
+          } @else {
+            @for (hospital of hospitals; track hospital.id) {
+              <option [value]="hospital.id">{{ hospital.name }}</option>
+            }
+          }
+        }
+      </select>
+    </label>
+    @if (hospitalControl.touched && hospitalControl.invalid) {
+      <div class="field-error">L'hôpital est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Spécialité
+      <select formControlName="specialtyId" [disabled]="specialtiesLoading">
+        <option value="" disabled>Choisir une spécialité</option>
+        @if (specialtiesLoading) {
+          <option disabled>Chargement des spécialités...</option>
+        } @else {
+          @if (specialties.length === 0) {
+            <option disabled>Aucune spécialité disponible</option>
+          } @else {
+            @for (specialty of specialties; track specialty.id) {
+              <option [value]="specialty.id">{{ specialty.name }}</option>
+            }
+          }
+        }
+      </select>
+    </label>
+    @if (specialtyControl.touched && specialtyControl.invalid) {
+      <div class="field-error">La spécialité est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Numéro de lit
+      <input #bedNumberInput type="text" formControlName="bedNumber" autocomplete="off" />
+    </label>
+    @if (bedNumberControl.touched && bedNumberControl.invalid) {
+      <div class="field-error">Le numéro de lit est obligatoire.</div>
+    }
+
+    <label class="confirm-label">
+      Numéro de chambre
+      <input type="text" formControlName="roomNumber" autocomplete="off" />
+    </label>
+
+    <label class="confirm-label">
+      Étage
+      <input type="number" formControlName="floor" />
+    </label>
+
+    <label class="confirm-label">
+      Statut
+      <select formControlName="status">
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </label>
+
+    @if (hospitalsError) {
+      <div class="alert error">{{ hospitalsError }}</div>
+    }
+
+    @if (specialtiesError) {
+      <div class="alert error">{{ specialtiesError }}</div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert error">{{ errorMessage }}</div>
+    }
+  </form>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn ghost" (click)="requestClose()" [disabled]="isSubmitting">
+      Annuler
+    </button>
+    <button type="button" class="btn primary" (click)="onSubmit()" [disabled]="isSubmitting">
+      @if (isSubmitting) {
+        <span class="spinner" aria-hidden="true"></span>
+        Enregistrement...
+      } @else {
+        Ajouter le lit
+      }
+    </button>
+  </footer>
+</div>

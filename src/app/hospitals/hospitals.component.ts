@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +9,8 @@ import { SidebarComponent } from '../shared/components/sidebar/sidebar.component
 import { CreateHospitalPayload, Hospital, HospitalUpdateRequest, HospitalsResponse, HospitalsService } from './hospitals.service';
 import { SpecialtiesService, Specialty } from '../specialties/specialties.service';
 import { HospitalEditModalComponent } from '../features/hospitals/hospital-edit-modal/hospital-edit-modal.component';
+import { BedFormModalComponent, BedCreatePayload } from '../features/beds/bed-form-modal/bed-form-modal.component';
+import { BedsService } from '../bed-management/beds.service';
 
 const emptyHospitalsResponse: HospitalsResponse = {
   totalElements: 0,
@@ -33,7 +36,15 @@ const emptyHospitalsResponse: HospitalsResponse = {
 @Component({
   selector: 'app-hospitals',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TopbarComponent, SidebarComponent, HospitalEditModalComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TopbarComponent,
+    SidebarComponent,
+    HospitalEditModalComponent,
+    BedFormModalComponent
+  ],
   templateUrl: './hospitals.component.html',
   styleUrl: './hospitals.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -41,6 +52,7 @@ const emptyHospitalsResponse: HospitalsResponse = {
 export class HospitalsComponent {
   private readonly service = inject(HospitalsService);
   private readonly specialtiesService = inject(SpecialtiesService);
+  private readonly bedsService = inject(BedsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly fb = inject(FormBuilder);
@@ -49,6 +61,7 @@ export class HospitalsComponent {
 
   readonly hospitals$ = this.hospitalsSubject.asObservable();
   readonly total$ = this.totalSubject.asObservable();
+  hospitals: Hospital[] = [];
   loading = true;
   loadError = '';
   statusMessage = '';
@@ -63,6 +76,10 @@ export class HospitalsComponent {
   selectedHospital: Hospital | null = null;
   isUpdating = false;
   updateError = '';
+  showBedModal = false;
+  isCreatingBed = false;
+  bedCreateError = '';
+  bedHospitalId: number | null = null;
 
   readonly createForm = this.fb.group({
     name: this.fb.control('', { validators: [Validators.required], nonNullable: true }),
@@ -142,6 +159,47 @@ export class HospitalsComponent {
       this.loadSpecialties();
     }
     this.showCreateModal = true;
+  }
+
+  onOpenBedModal(hospital?: Hospital): void {
+    if (this.isCreatingBed) {
+      return;
+    }
+    this.bedHospitalId = hospital?.id ?? null;
+    this.bedCreateError = '';
+    this.showBedModal = true;
+  }
+
+  onCloseBedModal(): void {
+    if (this.isCreatingBed) {
+      return;
+    }
+    this.showBedModal = false;
+    this.bedCreateError = '';
+    this.bedHospitalId = null;
+  }
+
+  onSubmitBed(payload: BedCreatePayload): void {
+    this.isCreatingBed = true;
+    this.bedCreateError = '';
+
+    this.bedsService
+      .createBed(payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isCreatingBed = false;
+          this.showBedModal = false;
+          this.statusType = 'success';
+          this.statusMessage = 'Lit ajouté avec succès.';
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.isCreatingBed = false;
+          this.bedCreateError = 'Création du lit impossible. Réessayez.';
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   onCloseCreateModal(): void {
@@ -344,6 +402,7 @@ export class HospitalsComponent {
         })
       )
       .subscribe((res) => {
+        this.hospitals = res.content;
         this.hospitalsSubject.next(res.content);
         this.totalSubject.next(res.totalElements);
         this.loading = false;

@@ -43,6 +43,14 @@ export const routes: Routes = [
     canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
   },
   {
+    path: 'hospitals/:hospitalId/beds',
+    loadComponent: () =>
+      import('./bed-management/bed-management.component').then(
+        (m) => m.BedManagementComponent
+      ),
+    canActivate: [() => import('./auth/auth.guard').then((m) => m.authGuard)]
+  },
+  {
     path: 'emergency',
     loadComponent: () =>
       import('./features/emergency/emergency-search.component').then(
