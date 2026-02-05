@@ -157,6 +157,9 @@
                   <a class="btn primary" [href]="getDirectionsUrl(result)" target="_blank" rel="noreferrer">
                     Itinéraire
                   </a>
+                  <a class="btn ghost" [routerLink]="['/hospitals', result.id, 'beds']">
+                    Gérer les lits
+                  </a>
                 </div>
               </div>
 

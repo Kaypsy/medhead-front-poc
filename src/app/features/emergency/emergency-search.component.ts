@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, finalize, map, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { SpecialtiesService, Specialty } from '../../specialties/specialties.service';
@@ -31,7 +32,7 @@ type MapMarkers = {
 @Component({
   selector: 'app-emergency-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TopbarComponent, SidebarComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TopbarComponent, SidebarComponent],
   templateUrl: './emergency-search.component.html',
   styleUrl: './emergency-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
