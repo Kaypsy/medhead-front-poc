@@ -12,6 +12,7 @@
           <p class="subtitle">
             @if (hospitalId) {
               Administration des lits pour l'hôpital #{{ hospitalId }}
+              @if (hospitalName) { - {{ hospitalName }} }
             } @else {
               Administration des lits
             }

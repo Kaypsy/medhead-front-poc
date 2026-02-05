@@ -81,6 +81,10 @@ export class HospitalsService {
     return this.http.get<HospitalsResponse>(`${environment.apiUrl}/api/hospitals`);
   }
 
+  getHospital(id: number): Observable<Hospital> {
+    return this.http.get<Hospital>(`${environment.apiUrl}/api/hospitals/${id}`);
+  }
+
   createHospital(payload: CreateHospitalPayload): Observable<Hospital> {
     return this.http.post<Hospital>(`${environment.apiUrl}/api/hospitals`, payload);
   }

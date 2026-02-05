@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
 import { ApiBed, Bed, BedStatus, BedsService } from './beds.service';
+import { Hospital, HospitalsService } from '../hospitals/hospitals.service';
 import { SpecialtiesService, Specialty } from '../specialties/specialties.service';
 
 type StatusOption = {
@@ -31,6 +32,7 @@ type SidebarLink = {
 export class BedManagementComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly bedsService = inject(BedsService);
+  private readonly hospitalsService = inject(HospitalsService);
   private readonly specialtiesService = inject(SpecialtiesService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -42,6 +44,7 @@ export class BedManagementComponent {
   readonly total$ = this.totalSubject.asObservable();
 
   hospitalId: number | null = null;
+  hospitalName = '';
   loading = true;
   loadError = '';
   statusMessage = '';
@@ -81,6 +84,7 @@ export class BedManagementComponent {
         return;
       }
       this.hospitalId = parsed;
+      this.hospitalName = '';
       this.mainLinks = [
         { label: 'A proximité', href: '/emergency' },
         { label: 'Membres', href: '/members' },
@@ -94,6 +98,7 @@ export class BedManagementComponent {
           accent: 'purple'
         }
       ];
+      this.loadHospital(parsed);
       this.loadBeds(parsed);
     });
   }
@@ -219,6 +224,26 @@ export class BedManagementComponent {
         this.bedsSubject.next(normalized);
         this.totalSubject.next(normalized.length);
         this.loading = false;
+        this.cdr.markForCheck();
+      });
+  }
+
+  private loadHospital(hospitalId: number): void {
+    this.hospitalsService
+      .getHospital(hospitalId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.hospitalName = '';
+          this.cdr.markForCheck();
+          return of(null as Hospital | null);
+        })
+      )
+      .subscribe((hospital) => {
+        if (!hospital) {
+          return;
+        }
+        this.hospitalName = hospital.name ?? '';
         this.cdr.markForCheck();
       });
   }
